@@ -18,8 +18,8 @@ public class PlayerView : MonoBehaviour
     void Update()
     {
         //get mouse input x,y axis, control mouse sensitivity, control frame rate
-        float x_input = Input.GetAxis("Mouse X") * mouse_sensitivity_x * Time.deltaTime;
-        float y_input = Input.GetAxis("Mouse Y") * mouse_sensitivity_y * Time.deltaTime;
+        float x_input = Input.GetAxis("Mouse X") * mouse_sensitivity_x * 2 * Time.deltaTime;
+        float y_input = Input.GetAxis("Mouse Y") * mouse_sensitivity_y * 2 * Time.deltaTime;
 
         // rotate XX
         x_rotate -= y_input;

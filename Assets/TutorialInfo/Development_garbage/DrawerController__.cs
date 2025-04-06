@@ -2,11 +2,11 @@ using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class DrawerController : MonoBehaviour
+public class DrawerController__ : MonoBehaviour
 {
     public Transform drawer; // Referência à gaveta
-    public Vector3 open_pos; // Opened position
-    public Vector3 closed_pos; //Closed position
+    private Vector3 open_pos; // Opened position
+    private Vector3 closed_pos; //Closed position
     public float speed; //Velocity
 
     public bool open; //Is Open
