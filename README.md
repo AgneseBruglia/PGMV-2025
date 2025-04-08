@@ -1,2 +1,2 @@
-# PVMV
-Group assigment for programação e criação de mundos virtuais
+# PGMV
+Group assigment for programação e geração de mundos virtuais
