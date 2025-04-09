@@ -5,6 +5,8 @@ using System.Xml;
 public class Cabinet : MonoBehaviour
 {
     public string xml_file = "cabinets/XML_Cabinet_1.xml"; // Defaults to cabinet
+    public TextAsset xml_asset;
+
     public GameObject prefab_p; // prefab_p
     public GameObject prefab_c; // prefabC
     public GameObject prefab_g; // prefabG
@@ -27,7 +29,11 @@ public class Cabinet : MonoBehaviour
         //Debug.LogError("Failed to instantiate door part!");
 
         // load xml and set it up
-        TextAsset xml_asset = (TextAsset)Resources.Load<TextAsset>(xml_file);
+        //TextAsset xml_asset = (TextAsset)Resources.Load<TextAsset>(xml_file);
+
+        //TextAsset xmlData = new TextAsset();
+        //xmlData = (TextAsset)Resources.Load("Talents.xml", typeof(TextAsset));
+
         if (xml_asset == null)
         {
             Debug.LogError("Failed to load XML file.");
