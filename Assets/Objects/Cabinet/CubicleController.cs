@@ -1,0 +1,55 @@
+using UnityEngine;
+
+public class CubicleController : MonoBehaviour
+{
+    public Transform door; // Reference 
+
+    public float speed;
+    public bool open; //is opened
+    public bool active; //action active 
+
+    private float open_angle;
+    private Quaternion open_rotation;
+    private Quaternion close_rotation;
+    private float rot_yy;
+    private float rot_zz;
+
+
+
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
+        active = true;
+        open = false;
+        speed = 2.0f;
+        open_angle = 130f;
+
+        open_rotation = Quaternion.Euler(new Vector3(door.rotation.x, door.rotation.y + open_angle, door.rotation.z));
+        close_rotation = door.rotation;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (!active)
+        {
+            return;
+        }
+
+        if (Input.GetKeyDown(KeyCode.E)) // "E" to open drowers 
+        {
+            open = !open;
+        }
+
+        if (open)
+        {
+            // Dampen towards the target rotation
+            door.rotation = Quaternion.Slerp(door.rotation, open_rotation, Time.deltaTime * speed);
+        }
+        else
+        {
+            // Dampen towards the target rotation
+            door.rotation = Quaternion.Slerp(door.rotation, close_rotation, Time.deltaTime * speed);
+        }
+    }
+}
