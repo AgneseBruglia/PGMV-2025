@@ -78,7 +78,7 @@ public class Cabinet : MonoBehaviour
 
                 //get position of the obj that the script is attached to
                 //Buiild interior of the cabinet
-                Vector3 position = transform.position + new Vector3(1, m, n);
+                Vector3 position = transform.position + new Vector3(0, m, n);
                 Instantiate(prefab, position, Quaternion.identity);
 
                 //door
