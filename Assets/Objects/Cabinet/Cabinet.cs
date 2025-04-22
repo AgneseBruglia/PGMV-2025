@@ -10,6 +10,7 @@ public class Cabinet : MonoBehaviour
     public GameObject prefab_p; // prefab_p
     public GameObject prefab_c; // prefabC
     public GameObject prefab_g; // prefabG
+	public GameObject prefab_glass; // prefabGlass
     public GameObject shell_corner; // Cabinet part 1,3,7,9
     public GameObject shell_middle; // Cabinet part 2, 4, 6, 8
     public GameObject shell_center; // Cabinet part 5
@@ -70,6 +71,9 @@ public class Cabinet : MonoBehaviour
                         break;
                     case "G":
                         prefab = prefab_g;
+                        break;
+					case "T":
+                        prefab = prefab_glass;
                         break;
                     default:
                         prefab = prefab_p; // empty
