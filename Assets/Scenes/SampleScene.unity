@@ -7781,6 +7781,7 @@ GameObject:
   m_Component:
   - component: {fileID: 705507995}
   - component: {fileID: 705507994}
+  - component: {fileID: 705507996}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -7868,6 +7869,29 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!114 &705507996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 705507993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
 --- !u!1001 &744331146
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11749,14 +11773,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f257e6e205bb8a48bd3cf7d16635002, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xml_file: 
   xml_asset: {fileID: 4900000, guid: f47af4241f5cea3428c43cb163c87147, type: 3}
   prefab_p: {fileID: 8876876975993706657, guid: 2db95bf55c6ccf44eba5d3b86413f4fe, type: 3}
   prefab_c: {fileID: 4299827239385216670, guid: 0e159b6d4ab5b8f4d9db602282f39a21, type: 3}
   prefab_g: {fileID: 2110790347640895792, guid: 8966e5a3cc216fa459b607b458389b7a, type: 3}
+  prefab_t_glass: {fileID: 16713120082588275, guid: a3749d35e9829bd489f7cf96a152b973, type: 3}
   shell_corner: {fileID: 1790498564443942692, guid: b6d562dfd8861c14abc87072b1c80f20, type: 3}
   shell_middle: {fileID: 5804834050904662166, guid: d72f0ee36a01077409867744156b059c, type: 3}
-  shell_center: {fileID: 6146987880986258060, guid: cb78a22c8a00cbf4ab33b5138ccadb9b, type: 3}
+  shell_center: {fileID: 7330275343535564040, guid: 7bef71a0bc2afd343ad7c64a32759089, type: 3}
   prefab_door_part: {fileID: 6964994095119810214, guid: edf5b3cdb33e9b743aa9eac06c8a9d52, type: 3}
 --- !u!4 &1729292661
 Transform:
