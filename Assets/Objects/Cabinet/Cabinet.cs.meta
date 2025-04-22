@@ -1,2 +1,19 @@
 fileFormatVersion: 2
 guid: 8f257e6e205bb8a48bd3cf7d16635002
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - prefab_p: {fileID: 8876876975993706657, guid: 2db95bf55c6ccf44eba5d3b86413f4fe, type: 3}
+  - prefab_c: {fileID: 4299827239385216670, guid: 0e159b6d4ab5b8f4d9db602282f39a21, type: 3}
+  - prefab_g: {fileID: 2110790347640895792, guid: 8966e5a3cc216fa459b607b458389b7a, type: 3}
+  - prefab_glass: {fileID: 8054001735393025470, guid: 09b3251de5252e949a96a5e1c04f2edd, type: 3}
+  - shell_corner: {fileID: 1790498564443942692, guid: b6d562dfd8861c14abc87072b1c80f20, type: 3}
+  - shell_middle: {fileID: 5804834050904662166, guid: d72f0ee36a01077409867744156b059c, type: 3}
+  - shell_center: {fileID: 6146987880986258060, guid: cb78a22c8a00cbf4ab33b5138ccadb9b, type: 3}
+  - prefab_door_part: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
