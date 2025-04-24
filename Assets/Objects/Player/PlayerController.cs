@@ -13,12 +13,24 @@ public class PlayerController : MonoBehaviour
     [SerializeField] bool use_physics = true;
     private Rigidbody rb;
 
+    [SerializeField] GameObject jet_bottom;
+    [SerializeField] GameObject jet_back_left;
+    [SerializeField] GameObject jet_back_right;
+
     public float gravity_force = -20f;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.linearDamping = 0; // config for falling , drag
+
+        jet_bottom     = GameObject.FindWithTag("JET_BOTTOM");
+        jet_back_left  = GameObject.FindWithTag("JET_BACK_LEFT");
+        jet_back_right = GameObject.FindWithTag("JET_BACK_RIGHT");
+
+        jet_bottom.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f); 
+        jet_back_left.transform.localScale = new Vector3(0.0f, 0.0f, 0.0f); 
+        jet_back_right.transform.localScale = new Vector3(0.0f, 0.0f, 0.0f); 
     }
 
     void Update()
@@ -48,24 +60,62 @@ public class PlayerController : MonoBehaviour
             rb.linearVelocity = Vector3.ClampMagnitude(rb.linearVelocity, max_speed);
         }
 
+        if (Input.GetAxis("Vertical") <= 0) // stopped or backwards
+        {
+            Debug.Log("(" + Input.GetAxis("Horizontal") + ", " + Input.GetAxis("Vertical") + ")");
+            jet_back_left.transform.localScale = new Vector3(0, 0, 0);
+            jet_back_right.transform.localScale = new Vector3(0, 0, 0);
+        }
+        else
+        {
+            Debug.Log("(" + Input.GetAxis("Horizontal") + ", " + Input.GetAxis("Vertical") + ")");
+            //[0.0, 0.3][-1, 1]
+            if (Input.GetAxis("Horizontal") > 0) // turn right
+            {
+                jet_back_left.transform.localScale = new Vector3(0.3f, Input.GetAxis("Vertical") * 0.3f, 0.3f);
+                jet_back_right.transform.localScale = new Vector3(0.3f, 0.0f, 0.3f);
+            }
+            else if (Input.GetAxis("Horizontal") < 0) // turn left
+            {
+                jet_back_left.transform.localScale = new Vector3(0.3f, 0.0f, 0.3f);
+                jet_back_right.transform.localScale = new Vector3(0.3f, Input.GetAxis("Vertical") * 0.3f, 0.3f);
+            }
+            else //forward
+            {
+                jet_back_left.transform.localScale = new Vector3(0.3f, Input.GetAxis("Vertical") * 0.3f, 0.3f);
+                jet_back_right.transform.localScale = new Vector3(0.3f, Input.GetAxis("Vertical") * 0.3f, 0.3f);
+            }
+
+            // full size = new Vector3(0.3f, 0.3f, 0.3f) (max)
+            jet_back_left.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f); // if negative right engine
+            jet_back_right.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
+        }
+
         //Jump
         if (Input.GetKeyDown(KeyCode.Space) && transform.position.y < 50)
         {
             //Physics.gravity = new Vector3(0, -9.81f, 0);
             // We need the vector to have move force than the gravity, ForceMode is applied against mass
             rb.AddForce(Vector3.up * jump_force * 9.81f * rb.mass, ForceMode.Impulse);
+            jet_bottom.transform.localScale = new Vector3(0.3f, 0.9f, 0.3f);
         }
         else if (Input.GetKey(KeyCode.Space)) // In Air Acelaration
         {
             //Physics.gravity = new Vector3(0, -9.81f, 0);
             // We need the vector to have move force than the gravity, ForceMode is applied against mass
             rb.AddForce(Vector3.up * speed * 9.81f * rb.mass, ForceMode.Acceleration);
-        }       
+            jet_bottom.transform.localScale = new Vector3(0.3f, 0.6f, 0.3f);
+        }
         else if (Input.GetKeyUp(KeyCode.Space) && transform.position.y < 50) // In Air decelaration
         {
             //Physics.gravity = new Vector3(0, -9.81f, 0);
             // We need the vector to have move force than the gravity, ForceMode is applied against mass
             rb.AddForce(Vector3.down * fall_force, ForceMode.Impulse);
+            jet_bottom.transform.localScale = new Vector3(0.3f, 0, 0.3f);
+        }
+        else 
+        {
+            jet_bottom.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
         }
 
         
