@@ -5,12 +5,12 @@ Shader "Custom/JetFire"
         _Color ("Color", Color) = (1,1,1,1)
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
         _Glossiness ("Smoothness", Range(0,1)) = 0.5
-        //_Shininess ("Shininess", Range(0,1)) = 0.05
         
-        //_Shininess ("Shininess", Range (0.03, 1)) = 0.078125
 
         _Metallic ("Metallic", Range(0,1)) = 0.0
         _Inflate ("Inflate", float) = 0.2
+
+        _EmissionColor ("Emission Color", Color) = (0,0,0,1)
     }
     SubShader
     {
@@ -37,7 +37,7 @@ Shader "Custom/JetFire"
         half _Glossiness;
         half _Metallic;
         fixed4 _Color;
-
+        fixed4 _EmissionColor;
         
         void vert (inout appdata_base v)
         {
@@ -69,12 +69,14 @@ Shader "Custom/JetFire"
             //o.Albedo = c.rgb;
 
             o.Albedo = float3(temp_screen_position.x, temp_screen_position.y, 0);
+            o.Emission = float3(temp_screen_position.x, temp_screen_position.y, 0);
 
             // Metallic and smoothness come from slider variables
             o.Metallic = _Metallic;
             o.Smoothness = _Glossiness;
             //o.Shininess = _Shininess;
             //o.Alpha = c.a;
+
         }
         ENDCG
     }
