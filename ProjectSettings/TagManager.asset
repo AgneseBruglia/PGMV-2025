@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - Ground
+  - jet_material
   layers:
   - Default
   - TransparentFX

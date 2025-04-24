@@ -6,14 +6,14 @@ public class PlayerController : MonoBehaviour
     public float speed = 5f;
     public float max_speed = 10f;
 
-    public float jump_force = 2f;
-    public float fall_force = 2f;
+    public float jump_force = 1f;
+    public float fall_force = 4f;
     
-    public float turn_rate = 10f;
+    public float turn_rate = 5f;
     [SerializeField] bool use_physics = true;
     private Rigidbody rb;
 
-    public float gravity_force = -10f;
+    public float gravity_force = -20f;
 
     void Start()
     {

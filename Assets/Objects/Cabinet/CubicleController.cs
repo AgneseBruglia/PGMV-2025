@@ -14,24 +14,66 @@ public class CubicleController : MonoBehaviour
     private float rot_yy;
     private float rot_zz;
 
+    void Awake() //Or OnEnable()
+    {
+        if (door != null)
+        {
+            // Access transform variables here before Start()
+            Debug.Log("AWAKE Intanttiated id(" + transform.GetInstanceID() + ")");
+        }
+        else
+        {
+            // Access transform variables here before Start()
+            Debug.Log("AWAKE not Intanttiated id(" + transform.GetInstanceID() + ")");
+        }
+    }
+
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        Debug.Log("Start method executed");
+
+        if (door != null)
+        {
+            // Access transform variables here before Start()
+            Debug.Log("START Intanttiated id(" + transform.GetInstanceID() + ")");
+        }
+        else
+        {
+            // Access transform variables here before Start()
+            Debug.Log("START not Intanttiated id(" + transform.GetInstanceID() + ")");
+        }
+
         active = true;
         open = false;
         speed = 2.0f;
         open_angle = 130f;
 
-        open_rotation = Quaternion.Euler(new Vector3(door.rotation.x, door.rotation.y + open_angle, door.rotation.z));
-        close_rotation = door.rotation;
+        if (door != null)
+        {
+            Debug.Log("YUPI door: id(" + transform.GetInstanceID() + ")");
+
+            open_rotation = Quaternion.Euler(new Vector3(door.rotation.x, door.rotation.y + open_angle, door.rotation.z));
+            close_rotation = door.rotation;           
+        }
+        else {
+            Debug.Log("NUll reference: id(" + transform.GetInstanceID() + ")");
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!active)
+        if (door == null)
+        {
+            //Debug.LogError("Door is not assigned");
+            Debug.Log("Door is not assigned");
+            return;
+        }
+
+            if (!active)
         {
             return;
         }
@@ -43,11 +85,13 @@ public class CubicleController : MonoBehaviour
 
         if (open)
         {
+            Debug.Log("door open: (" + door + ")");
             // Dampen towards the target rotation
             door.rotation = Quaternion.Slerp(door.rotation, open_rotation, Time.deltaTime * speed);
         }
         else
         {
+            Debug.Log("door close: (" + door + ")");
             // Dampen towards the target rotation
             door.rotation = Quaternion.Slerp(door.rotation, close_rotation, Time.deltaTime * speed);
         }
