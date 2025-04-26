@@ -16,16 +16,6 @@ public class CubicleController : MonoBehaviour
 
     void Awake() //Or OnEnable()
     {
-        if (door != null)
-        {
-            // Access transform variables here before Start()
-            Debug.Log("AWAKE Intanttiated id(" + transform.GetInstanceID() + ")");
-        }
-        else
-        {
-            // Access transform variables here before Start()
-            Debug.Log("AWAKE not Intanttiated id(" + transform.GetInstanceID() + ")");
-        }
     }
 
 
@@ -33,8 +23,6 @@ public class CubicleController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        Debug.Log("Start method executed");
-
         active = true;
         open = false;
         speed = 2.0f;
@@ -42,8 +30,6 @@ public class CubicleController : MonoBehaviour
 
         if (door != null)
         {
-            Debug.Log("YUPI door: id(" + transform.GetInstanceID() + ")");
-
             open_rotation = Quaternion.Euler(new Vector3(door.rotation.x, door.rotation.y + open_angle, door.rotation.z));
             close_rotation = door.rotation;           
         }

@@ -3,12 +3,16 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags: 
+  tags:
   - Ground
   - jet_material
   - JET_BOTTOM
   - JET_BACK_LEFT
   - JET_BACK_RIGHT
+  - Lamp
+  - RIGHT_ARM_POS
+  - LEFT_ARM_POS
+  - Camera
   layers:
   - Default
   - TransparentFX

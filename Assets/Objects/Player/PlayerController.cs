@@ -82,9 +82,10 @@ public class PlayerController : MonoBehaviour
         }
 		
 		
+        //jets
         if (Input.GetAxis("Vertical") <= 0) // stopped or backwards
         {
-            Debug.Log("(" + Input.GetAxis("Horizontal") + ", " + Input.GetAxis("Vertical") + ")");
+            //Debug.Log("(" + Input.GetAxis("Horizontal") + ", " + Input.GetAxis("Vertical") + ")");
             jet_back_left.transform.localScale = new Vector3(0, 0, 0);
             jet_back_right.transform.localScale = new Vector3(0, 0, 0);
         }

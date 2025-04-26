@@ -6,6 +6,8 @@ public class PlayerView : MonoBehaviour
     public float mouse_sensitivity_y = 200f;
     public Transform player_body;
 
+    public GameObject cameraToToggle;
+
     private float x_rotate = 0f;
 
     [SerializeField] private string[] interactableTags;
@@ -15,17 +17,33 @@ public class PlayerView : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        //Cursor.lockState = CursorLockMode.Locked; // Lock cursor to the center of the view
-        Cursor.lockState= CursorLockMode.None;
-        Cursor.visible= true;
+        Cursor.lockState = CursorLockMode.Locked; // Lock cursor to the center of the view
+        //Cursor.lockState= CursorLockMode.None;
+        //Cursor.visible= true;
+        cameraToToggle = GameObject.FindWithTag("Camera");
 
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            Debug.Log("G PRESSED, cameraToToggle != null:" + cameraToToggle != null);
+            if (cameraToToggle != null) 
+            {
+                bool active = cameraToToggle.activeSelf;
+
+                cameraToToggle.SetActive(!active);
+
+
+                Debug.Log($"Camera is active: '{cameraToToggle.activeSelf}'.");
+            }
+            
+
+        }
         // Raycast to interact with elements of the scene
-        if(Input.GetKeyDown(KeyCode.E)) 
+        if (Input.GetKeyDown(KeyCode.E)) 
         {
             RaycastHit[] hits= Physics.RaycastAll(transform.position, transform.forward, interactLength);
             if(hits.Length>0 ){
