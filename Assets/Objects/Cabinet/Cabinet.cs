@@ -40,6 +40,13 @@ public class Cabinet : MonoBehaviour
         XmlNodeList columns = xml_doc.SelectNodes("/cabinet/column");
 
         door = new GameObject("Door");
+        door.transform.SetParent(transform);
+
+        Vector3 parent_position = transform.position;
+        Quaternion parent_rotation = transform.rotation;
+
+        transform.position = new Vector3(0, 0, 0);
+        transform.rotation = Quaternion.Euler(0f, 0f, 0f);
 
         int n_max = columns.Count - 1;
         int n = 0;
@@ -73,10 +80,11 @@ public class Cabinet : MonoBehaviour
                 //get position of the obj that the script is attached to
                 //Buiild interior of the cabinet
                 Vector3 position = transform.position + new Vector3(0, m, n);
-                Instantiate(prefab, position, Quaternion.identity);
+                
+                Instantiate(prefab, position, Quaternion.identity, transform);
 
                 //door
-                GameObject door_part = Instantiate(prefab_door_part, position, transform.rotation * Quaternion.Euler(0f, 0f, 0f), door.transform);
+                GameObject door_part = Instantiate(prefab_door_part, position, Quaternion.Euler(0f, 0f, 0f), door.transform);
                 if (door_part != null)
                 {
                     //Debug.Log("Instantiated door part successfully.");
@@ -90,42 +98,42 @@ public class Cabinet : MonoBehaviour
                 //build corners
                 if (n == 0 && m == m_max) //Build corner 1
                 {
-                    Instantiate(shell_corner, position, transform.rotation * Quaternion.Euler(0f, 0f, 0f));
+                    Instantiate(shell_corner, position, Quaternion.Euler(0f, 0f, 0f), transform);
                 }
                 else if (n == n_max && m == m_max)//Build corner 2
                 {
-                    Instantiate(shell_corner, position, transform.rotation * Quaternion.Euler(90f, 0f, 0f));
+                    Instantiate(shell_corner, position, Quaternion.Euler(90f, 0f, 0f), transform);
                 }
                 else if (n == 0 && m == 0)//Build corner 3 (7)
                 {
-                    Instantiate(shell_corner, position, transform.rotation * Quaternion.Euler(-90f, 0f, 0f));
+                    Instantiate(shell_corner, position, Quaternion.Euler(-90f, 0f, 0f), transform);
                 }
                 else if (n == n_max && m == 0)//Build corner 4 (build 9 if 3x3)
                 {
-                    Instantiate(shell_corner, position, transform.rotation * Quaternion.Euler(180f, 0f, 0f));
+                    Instantiate(shell_corner, position, Quaternion.Euler(180f, 0f, 0f), transform); 
                 }
                 // build borders
                 else if (n != 0 && n != n_max && m == m_max) //Build between corner 1 to corner 2 (build 2 if 3x3)
                 {
-                    Instantiate(shell_middle, position, transform.rotation * Quaternion.Euler(0f, 0f, 0f));
+                    Instantiate(shell_middle, position, Quaternion.Euler(0f, 0f, 0f), transform);
                 }
                 else if (n == 0 && m != m_max && m != 0)
                 {
                     //Build between corner 1 to corner 3 (build 4 if 3x3)
-                    Instantiate(shell_middle, position, transform.rotation * Quaternion.Euler(-90f, 0f, 0f));
+                    Instantiate(shell_middle, position, Quaternion.Euler(-90f, 0f, 0f), transform);
                 }
                 else if (n == n_max && m != m_max && m != 0)
                 {
                     //Build between corner 2 to corner 4 (build 6 if 3x3)
-                    Instantiate(shell_middle, position, transform.rotation * Quaternion.Euler(90f, 0f, 0f));
+                    Instantiate(shell_middle, position, Quaternion.Euler(90f, 0f, 0f), transform);
                 }
                 else if (n != 0 && n != n_max && m == 0) //Build between corner 3 to corner 4 (build 8 if 3x3)
                 {
-                    Instantiate(shell_middle, position, transform.rotation * Quaternion.Euler(180f, 0f, 0f));
+                    Instantiate(shell_middle, position, Quaternion.Euler(180f, 0f, 0f), transform);
                 }
                 else
                 {
-                    Instantiate(shell_center, position, transform.rotation * Quaternion.Euler(0f, 0f, 0f));
+                    Instantiate(shell_center, position, Quaternion.Euler(0f, 0f, 0f), transform);
                 }
 
                 m++;
@@ -133,7 +141,11 @@ public class Cabinet : MonoBehaviour
             n++;
         }
 
+        transform.position = parent_position;
+        transform.rotation = parent_rotation;
+
         door.AddComponent<Door.DoorController>(); //adicionar o script paarra abrir a porta
+
 
         // Create a light and attach it to the cabinet
         //GameObject lightGameObject = new GameObject("CabinetLight");
