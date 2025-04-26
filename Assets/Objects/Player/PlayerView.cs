@@ -8,10 +8,17 @@ public class PlayerView : MonoBehaviour
 
     private float x_rotate = 0f;
 
+    [SerializeField] private string[] interactableTags;
+    [SerializeField] private float interactLength = 3f;
+
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked; // Lock cursor to the center of the view
+        //Cursor.lockState = CursorLockMode.Locked; // Lock cursor to the center of the view
+        Cursor.lockState= CursorLockMode.None;
+        Cursor.visible= true;
+
     }
 
     // Update is called once per frame
@@ -23,16 +30,56 @@ public class PlayerView : MonoBehaviour
 
         // rotate XX
         x_rotate -= y_input;
+<<<<<<< Updated upstream
 
         Debug.Log("x_rotate:" + x_rotate);
 
         //x_rotate = Mathf.Clamp(x_rotate, -30f, 30f); // restric 90º
 
         Debug.Log("x_rotate clamped:" + x_rotate);
+=======
+        x_rotate = Mathf.Clamp(x_rotate, -90f, 90f); // restric 90ï¿½
+>>>>>>> Stashed changes
 
 
         transform.localRotation = Quaternion.Euler(x_rotate, 0f, 0f);
 
         player_body.Rotate(Vector3.up * x_input); // rotate YY
+
+        // Raycast to interact with elements of the scene
+        if(Input.GetKeyDown(KeyCode.E)) 
+        {
+            RaycastHit[] hits= Physics.RaycastAll(transform.position, transform.forward, interactLength);
+            if(hits.Length>0 ){
+                foreach(RaycastHit hit in hits){
+                    Debug.Log("Clicked on 1: "+ hit.collider.name);
+                    foreach(string tag in interactableTags){
+                        if(hit.transform.CompareTag(tag)){
+                            Debug.Log("Clicked on 2: "+ hit.collider.name);
+                            hit.transform.SendMessage("OnPlayerInteract");
+                            break;
+                        }
+                    }
+                }
+            }
+            /* Ray ray= new Ray(transform.position, transform.forward);
+             hit;
+            if(Physics.Raycast(ray, out hit, 5f))
+            {
+                Debug.Log("Clicked on: "+ hit.collider.name); // log to check if it works
+
+                //if the object has an Interact method it gets called
+                var interactable= hit.collider.GetComponent<IInteractable>();
+                if(interactable!= null){
+                    interactable.Interact();s
+                }
+            } */
+        }
     }
+
+    private void OnDrawGizmosSelected(){
+        Gizmos.color= Color.blue;
+        Gizmos.DrawLine(transform.position, transform.position+transform.forward*interactLength);
+    }
+
 }

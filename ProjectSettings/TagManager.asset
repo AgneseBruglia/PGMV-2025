@@ -5,10 +5,14 @@ TagManager:
   serializedVersion: 3
   tags:
   - Ground
+<<<<<<< Updated upstream
   - jet_material
   - JET_BOTTOM
   - JET_BACK_LEFT
   - JET_BACK_RIGHT
+=======
+  - Lamp
+>>>>>>> Stashed changes
   layers:
   - Default
   - TransparentFX
