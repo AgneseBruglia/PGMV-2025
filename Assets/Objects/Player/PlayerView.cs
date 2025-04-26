@@ -15,7 +15,7 @@ public class PlayerView : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked; // Lock cursor to the center of the view
+        //Cursor.lockState = CursorLockMode.Locked; // Lock cursor to the center of the view
         Cursor.lockState= CursorLockMode.None;
         Cursor.visible= true;
 
@@ -24,19 +24,6 @@ public class PlayerView : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //get mouse input x,y axis, control mouse sensitivity, control frame rate
-        float x_input = Input.GetAxis("Mouse X") * mouse_sensitivity_x * 2 * Time.deltaTime;
-        float y_input = Input.GetAxis("Mouse Y") * mouse_sensitivity_y * 2 * Time.deltaTime;
-
-        // rotate XX
-        x_rotate -= y_input;
-        x_rotate = Mathf.Clamp(x_rotate, -90f, 90f); // restric 90�
-
-
-        transform.localRotation = Quaternion.Euler(x_rotate, 0f, 0f);
-
-        player_body.Rotate(Vector3.up * x_input); // rotate YY
-
         // Raycast to interact with elements of the scene
         if(Input.GetKeyDown(KeyCode.E)) 
         {

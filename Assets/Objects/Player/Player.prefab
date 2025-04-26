@@ -5360,6 +5360,8 @@ MonoBehaviour:
   jet_back_left: {fileID: 0}
   jet_back_right: {fileID: 0}
   gravity_force: -10
+  mouse_sensitivity_x: 200
+  mouse_sensitivity_y: 200
 --- !u!1 &4721993322408695829
 GameObject:
   m_ObjectHideFlags: 0
@@ -5374,7 +5376,7 @@ GameObject:
   - component: {fileID: 8262712229715548032}
   m_Layer: 0
   m_Name: Jet
-  m_TagString: Untagged
+  m_TagString: JET_BOTTOM
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7892,7 +7894,7 @@ GameObject:
   - component: {fileID: 4720977365065744463}
   m_Layer: 0
   m_Name: Jet
-  m_TagString: Untagged
+  m_TagString: JET_BACK_LEFT
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
