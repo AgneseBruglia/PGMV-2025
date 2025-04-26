@@ -6,7 +6,7 @@ public class PlayerController : MonoBehaviour
     public float speed = 5f;
     public float max_speed = 10f;
 
-    public float jump_force = 1f;
+    public float jump_force = 0.5f;
     public float fall_force = 4f;
     
     public float turn_rate = 5f;
@@ -19,8 +19,16 @@ public class PlayerController : MonoBehaviour
 
     public float gravity_force = -20f;
 
+    public float mouse_sensitivity_x = 200f;
+    public float mouse_sensitivity_y = 200f;
+    //public Transform player_body;
+
+    private float x_rotate = 0f;
+
     void Start()
     {
+        Cursor.lockState = CursorLockMode.Locked; // Lock cursor to the center of the view
+
         rb = GetComponent<Rigidbody>();
         rb.linearDamping = 0; // config for falling , drag
 
@@ -38,6 +46,9 @@ public class PlayerController : MonoBehaviour
         rb.isKinematic = !use_physics;
         rb.useGravity = use_physics;
 
+        Debug.Log("!use_physics:" + (!use_physics));
+
+
         //Move 
         if (!use_physics)
         {
@@ -46,11 +57,25 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            Debug.Log("Applying forces to go forward and backweards");
-            //rb.AddRelativeForce(Vector3.forward * Input.GetAxis("Vertical") * speed, ForceMode.Force);
-            //rb.AddRelativeForce(Vector3.right * Input.GetAxis("Horizontal") * speed, ForceMode.Force);
             rb.AddRelativeForce(Vector3.forward * Input.GetAxis("Vertical") * speed, ForceMode.Force);
             rb.AddRelativeForce(Vector3.right * Input.GetAxis("Horizontal") * speed, ForceMode.Force);
+
+
+            //get mouse input x,y axis, control mouse sensitivity, control frame rate
+            float x_input = Input.GetAxis("Mouse X") * mouse_sensitivity_x * 10 * Time.deltaTime;
+            float y_input = Input.GetAxis("Mouse Y") * mouse_sensitivity_y * 2 * Time.deltaTime;
+
+            Debug.Log("mouse x:" + x_input);
+            Debug.Log("mouse y:" + y_input);
+
+            // rotate XX
+            x_rotate -= y_input;
+            x_rotate = Mathf.Clamp(x_rotate, -30f, 30f); // restric 90º
+
+
+            transform.localRotation = Quaternion.Euler(x_rotate, transform.localRotation.eulerAngles.y, 0f);
+
+            transform.Rotate(Vector3.up * x_input); // rotate YY
         }
 
         //Limit velocity

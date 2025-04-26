@@ -35,17 +35,6 @@ public class CubicleController : MonoBehaviour
     {
         Debug.Log("Start method executed");
 
-        if (door != null)
-        {
-            // Access transform variables here before Start()
-            Debug.Log("START Intanttiated id(" + transform.GetInstanceID() + ")");
-        }
-        else
-        {
-            // Access transform variables here before Start()
-            Debug.Log("START not Intanttiated id(" + transform.GetInstanceID() + ")");
-        }
-
         active = true;
         open = false;
         speed = 2.0f;
@@ -69,7 +58,7 @@ public class CubicleController : MonoBehaviour
         if (door == null)
         {
             //Debug.LogError("Door is not assigned");
-            Debug.Log("Door is not assigned");
+            //Debug.Log("Door is not assigned");
             return;
         }
 
@@ -81,19 +70,17 @@ public class CubicleController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E)) // "E" to open drowers 
         {
             open = !open;
-        }
 
-        if (open)
-        {
-            Debug.Log("door open: (" + door + ")");
-            // Dampen towards the target rotation
-            door.rotation = Quaternion.Slerp(door.rotation, open_rotation, Time.deltaTime * speed);
-        }
-        else
-        {
-            Debug.Log("door close: (" + door + ")");
-            // Dampen towards the target rotation
-            door.rotation = Quaternion.Slerp(door.rotation, close_rotation, Time.deltaTime * speed);
+            if (open)
+            {
+                // Dampen towards the target rotation
+                door.rotation = Quaternion.Slerp(door.rotation, open_rotation, Time.deltaTime * speed);
+            }
+            else
+            {
+                // Dampen towards the target rotation
+                door.rotation = Quaternion.Slerp(door.rotation, close_rotation, Time.deltaTime * speed);
+            }
         }
     }
 }
