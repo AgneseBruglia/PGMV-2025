@@ -30,16 +30,7 @@ public class PlayerView : MonoBehaviour
 
         // rotate XX
         x_rotate -= y_input;
-<<<<<<< Updated upstream
-
-        Debug.Log("x_rotate:" + x_rotate);
-
-        //x_rotate = Mathf.Clamp(x_rotate, -30f, 30f); // restric 90º
-
-        Debug.Log("x_rotate clamped:" + x_rotate);
-=======
         x_rotate = Mathf.Clamp(x_rotate, -90f, 90f); // restric 90ï¿½
->>>>>>> Stashed changes
 
 
         transform.localRotation = Quaternion.Euler(x_rotate, 0f, 0f);

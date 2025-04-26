@@ -57,6 +57,9 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
+            //Debug.Log("Applying forces to go forward and backweards");
+            //rb.AddRelativeForce(Vector3.forward * Input.GetAxis("Vertical") * speed, ForceMode.Force);
+            //rb.AddRelativeForce(Vector3.right * Input.GetAxis("Horizontal") * speed, ForceMode.Force);
             rb.AddRelativeForce(Vector3.forward * Input.GetAxis("Vertical") * speed, ForceMode.Force);
             rb.AddRelativeForce(Vector3.right * Input.GetAxis("Horizontal") * speed, ForceMode.Force);
 
@@ -70,7 +73,7 @@ public class PlayerController : MonoBehaviour
 
             // rotate XX
             x_rotate -= y_input;
-            x_rotate = Mathf.Clamp(x_rotate, -30f, 30f); // restric 90º
+            x_rotate = Mathf.Clamp(x_rotate, -30f, 30f); // restric 90ï¿½
 
 
             transform.localRotation = Quaternion.Euler(x_rotate, transform.localRotation.eulerAngles.y, 0f);
