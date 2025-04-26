@@ -3559,12 +3559,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 77087813}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
-  m_LocalPosition: {x: 75.4, y: 16, z: -54}
-  m_LocalScale: {x: 0.32, y: 0.32, z: 0.32}
+  m_LocalRotation: {x: -0, y: -0, z: 1, w: 0}
+  m_LocalPosition: {x: 75.23511, y: 50, z: 0}
+  m_LocalScale: {x: 1.0031347, y: 1, z: 1.0031347}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 340972678}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
 --- !u!43 &99266043
 Mesh:
@@ -7793,8 +7793,8 @@ Transform:
   m_GameObject: {fileID: 340972672}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 51.4, y: 0, z: -54.19851}
-  m_LocalScale: {x: 0.32, y: 0.32, z: 0.35}
+  m_LocalPosition: {x: 51.4, y: 0, z: -54}
+  m_LocalScale: {x: 0.319, y: 0.32, z: 0.319}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1397716990}
@@ -7818,6 +7818,8 @@ Transform:
   - {fileID: 1235142280}
   - {fileID: 121759898}
   - {fileID: 25944735}
+  - {fileID: 809983842}
+  - {fileID: 77087817}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &388694184 stripped
@@ -10564,15 +10566,15 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 809983838}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 75.633545, y: 10, z: -54.41802}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 75.96722, y: 31.25, z: 0}
+  m_LocalScale: {x: 3.1034482, y: 3.125, z: 2.8840125}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 749856360}
   - {fileID: 886308317}
   - {fileID: 567170335}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 340972678}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &857721232
 PrefabInstance:
@@ -14315,14 +14317,12 @@ SceneRoots:
   m_Roots:
   - {fileID: 705507995}
   - {fileID: 1035573411}
-  - {fileID: 77087817}
   - {fileID: 110708350}
   - {fileID: 340972678}
   - {fileID: 744331146}
   - {fileID: 1835056641}
   - {fileID: 1302526146}
   - {fileID: 1965147690}
-  - {fileID: 809983842}
   - {fileID: 1729292661}
   - {fileID: 206707626}
   - {fileID: 73716254}
