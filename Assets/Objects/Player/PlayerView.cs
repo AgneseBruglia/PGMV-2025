@@ -2,13 +2,8 @@ using UnityEngine;
 
 public class PlayerView : MonoBehaviour
 {
-    public float mouse_sensitivity_x = 200f;
-    public float mouse_sensitivity_y = 200f;
-    public Transform player_body;
-
     public GameObject cameraToToggle;
-
-    private float x_rotate = 0f;
+    public GameObject eyes;
 
     [SerializeField] private string[] interactableTags;
     [SerializeField] private float interactLength = 3f;
@@ -29,18 +24,15 @@ public class PlayerView : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.G))
         {
-            Debug.Log("G PRESSED, cameraToToggle != null:" + cameraToToggle != null);
-            if (cameraToToggle != null) 
-            {
-                bool active = cameraToToggle.activeSelf;
-
-                cameraToToggle.SetActive(!active);
+            bool hide_eyes = eyes.activeSelf;
+            eyes.SetActive(!hide_eyes);
 
 
-                Debug.Log($"Camera is active: '{cameraToToggle.activeSelf}'.");
-            }
-            
+            bool active = cameraToToggle.activeSelf;
 
+            cameraToToggle.SetActive(!active);
+
+            Debug.Log($"Camera is active: '{cameraToToggle.activeSelf}'.");
         }
         // Raycast to interact with elements of the scene
         if (Input.GetKeyDown(KeyCode.E)) 

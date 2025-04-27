@@ -13,6 +13,7 @@ TagManager:
   - RIGHT_ARM_POS
   - LEFT_ARM_POS
   - Camera
+  - EYES
   layers:
   - Default
   - TransparentFX

@@ -102,7 +102,7 @@ public class ArmGenerator : MonoBehaviour
 
         if (!Input.anyKey && countdownTime < 0)
         {
-            StandBy();
+            //StandBy();
         }
     }
 
@@ -139,6 +139,11 @@ public class ArmGenerator : MonoBehaviour
         hand_right.transform.position = new Vector3(0, -1f, 0);
 
         shoulder_right.transform.position = arm_right.transform.position;
+
+        //shoulder left
+        arm_left.transform.GetChild(0).transform.localRotation = Quaternion.Euler(-90, 0, 0);
+        //shoulder left
+        arm_right.transform.GetChild(0).transform.localRotation = Quaternion.Euler(-90, 0, 0);
     }
 
     void StandBy()
@@ -174,14 +179,23 @@ public class ArmGenerator : MonoBehaviour
 
 
         //shoulder left
-        arm_left.transform.GetChild(0).transform.localRotation = Quaternion.Euler(-90,0,0);
+        arm_left.transform.GetChild(0).transform.localRotation = Quaternion.Euler(-90, 0, 0);
+        //shoulder left
+        arm_right.transform.GetChild(0).transform.localRotation = Quaternion.Euler(-90, 0, 0);
 
         //elbow left
         arm_left.transform.GetChild(0).transform.GetChild(1).transform.localRotation =
             Quaternion.AngleAxis(5 * Mathf.Sin(10 * speed * time), new Vector3(1, 0, 0));
+        //elbow left
+        arm_right.transform.GetChild(0).transform.GetChild(1).transform.localRotation =
+            Quaternion.AngleAxis(5 * Mathf.Sin(10 * speed * time), new Vector3(1, 0, 0));
 
         //hand left
         arm_left.transform.GetChild(0).transform.GetChild(1).transform.GetChild(1).transform.localRotation =
+            Quaternion.AngleAxis(180 * Mathf.Sin(speed * time + Mathf.PI / 4), new Vector3(0, 1, 0));
+
+        //hand right
+        arm_right.transform.GetChild(0).transform.GetChild(1).transform.GetChild(1).transform.localRotation =
             Quaternion.AngleAxis(180 * Mathf.Sin(speed * time + Mathf.PI / 4), new Vector3(0, 1, 0));
     }
 
