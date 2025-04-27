@@ -35,7 +35,7 @@ public class PlayerView : MonoBehaviour
             Debug.Log($"Camera is active: '{cameraToToggle.activeSelf}'.");
         }
         // Raycast to interact with elements of the scene
-        if (Input.GetKeyDown(KeyCode.E)) 
+        if (Input.GetMouseButtonDown(0)) 
         {
             RaycastHit[] hits= Physics.RaycastAll(transform.position, transform.forward, interactLength);
             if(hits.Length>0 ){
