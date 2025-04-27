@@ -408,7 +408,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50b7722c9bbafcb4da369165e4f6bdb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraToToggle: {fileID: 1394840718}
+  cameraToToggle: {fileID: 206707623}
   eyes: {fileID: 489303714}
   interactableTags:
   - Lamp
@@ -23244,7 +23244,6 @@ GameObject:
   - component: {fileID: 1394840721}
   - component: {fileID: 1394840720}
   - component: {fileID: 1394840719}
-  - component: {fileID: 1394840722}
   m_Layer: 0
   m_Name: CMCamera_firstperson
   m_TagString: Untagged
@@ -23336,23 +23335,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 308428233}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1394840722
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1394840718}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 50b7722c9bbafcb4da369165e4f6bdb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cameraToToggle: {fileID: 73716249}
-  eyes: {fileID: 0}
-  interactableTags:
-  - Lamp
-  interactLength: 3
 --- !u!1001 &1397716989
 PrefabInstance:
   m_ObjectHideFlags: 0
