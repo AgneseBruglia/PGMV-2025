@@ -14,6 +14,8 @@ TagManager:
   - LEFT_ARM_POS
   - Camera
   - EYES
+  - CABINET_LIGHTS
+  - InstructionsE
   layers:
   - Default
   - TransparentFX

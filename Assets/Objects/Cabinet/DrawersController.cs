@@ -6,7 +6,7 @@ public class DrawersControilleer : MonoBehaviour
     
     public float speed;
     public bool open; //is opened
-    public bool active; //action active 
+    public bool active; //action active
 
     private Vector3 open_pos;
     private Vector3 close_pos;
@@ -14,7 +14,6 @@ public class DrawersControilleer : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        active = true;
         open = false;
         speed = 2.0f;
         close_pos = new Vector3(drawer.position.x, drawer.position.y, drawer.position.z);
@@ -24,11 +23,6 @@ public class DrawersControilleer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!active)
-        {
-            return;
-        }
-
         if (Input.GetKeyDown(KeyCode.E)) // "E" to open drowers 
         {
             open = !open;

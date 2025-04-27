@@ -102,7 +102,7 @@ public class ArmGenerator : MonoBehaviour
 
         if (!Input.anyKey && countdownTime < 0)
         {
-            //StandBy();
+           StandBy();
         }
     }
 
@@ -175,9 +175,6 @@ public class ArmGenerator : MonoBehaviour
 
     void Action() // on key E  is pressed
     {
-        Debug.Log("E was pressed");
-
-
         //shoulder left
         arm_left.transform.GetChild(0).transform.localRotation = Quaternion.Euler(-90, 0, 0);
         //shoulder left
