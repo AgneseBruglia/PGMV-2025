@@ -18,6 +18,9 @@ public class DoorOpener : MonoBehaviour
 
     void Start()
     {
+        //
+        Debug.Log("Door opener");
+
         // Save the starting (closed) positions
         rightClosedPosition = door_2_right.localPosition;
         leftClosedPosition = door_2_left.localPosition;
