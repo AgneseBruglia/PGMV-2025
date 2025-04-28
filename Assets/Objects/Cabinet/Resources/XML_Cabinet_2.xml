@@ -2,10 +2,4 @@
 <cabinet>
 	<column><row>G</row><row>P</row><row>C</row></column>
 	<column><row>P</row><row>P</row><row>G</row></column>
-	<column><row>C</row><row>G</row><row>G</row></column>
-	<column>
-		<row>G</row>
-		<row>G</row>
-		<row>G</row>
-	</column>
 </cabinet>
