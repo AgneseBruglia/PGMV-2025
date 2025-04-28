@@ -248,7 +248,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 2ce01831e9f3ae441bb48623e5fbe0c0, type: 2}
+  - {fileID: 2100000, guid: d2f6c6d261ec30d4788e33a9951a2ef5, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -310,7 +310,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1031417360584022427}
   m_Layer: 0
-  m_Name: Shell_door
+  m_Name: shell_door
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
