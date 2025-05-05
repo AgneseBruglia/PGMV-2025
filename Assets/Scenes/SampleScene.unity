@@ -626,6 +626,18 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1688907216108932613, guid: 4e667568d3916294f9429d1b99e918f1, type: 3}
+      propertyPath: interactableTags.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1688907216108932613, guid: 4e667568d3916294f9429d1b99e918f1, type: 3}
+      propertyPath: 'interactableTags.Array.data[1]'
+      value: Cabinet_door
+      objectReference: {fileID: 0}
+    - target: {fileID: 1688907216108932613, guid: 4e667568d3916294f9429d1b99e918f1, type: 3}
+      propertyPath: 'interactableTags.Array.data[2]'
+      value: Building_door
+      objectReference: {fileID: 0}
     - target: {fileID: 2217826018454621161, guid: 4e667568d3916294f9429d1b99e918f1, type: 3}
       propertyPath: m_Mesh
       value: 
