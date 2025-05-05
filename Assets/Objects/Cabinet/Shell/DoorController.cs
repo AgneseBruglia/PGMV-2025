@@ -29,10 +29,6 @@ namespace Door
                 return;
             }
 
-            if (Input.GetKeyDown(KeyCode.E)) // "E" to open drowers 
-            {
-                open = !open;
-            }
 
             if (open)
             {
@@ -42,6 +38,12 @@ namespace Door
             {
                 transform.position = Vector3.Lerp(transform.position, close_pos, Time.deltaTime * speed); //Linearly interpolates between two points.
             }
+        }
+
+        public void OnPlayerInteract()
+        {
+            Debug.Log("OnPlayerInteract chiamato per: " + gameObject.name);
+            open = !open;
         }
     }
 

@@ -85,4 +85,10 @@ public class CabinetDoorController : MonoBehaviour
         bottom_door.transform.position = Vector3.Lerp(bottom_open, bottom_close, Time.deltaTime * speed);
         */
     }
+
+    public void OnPlayerInteract()
+{
+    open = !open;
+}
+
 }

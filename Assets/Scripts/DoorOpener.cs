@@ -32,11 +32,6 @@ public class DoorOpener : MonoBehaviour
 
     void Update()
     {
-        // Toggle door open/close with E
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            isOpen = !isOpen;
-        }
 
         // Move doors toward their target positions
         Vector3 rightTarget = isOpen ? rightOpenPosition : rightClosedPosition;
@@ -45,4 +40,11 @@ public class DoorOpener : MonoBehaviour
         door_2_right.localPosition = Vector3.Lerp(door_2_right.localPosition, rightTarget, Time.deltaTime * openSpeed);
         door_2_left.localPosition = Vector3.Lerp(door_2_left.localPosition, leftTarget, Time.deltaTime * openSpeed);
     }
+
+    public void OnPlayerInteract()
+    {
+        Debug.Log("OnPlayerInteract chiamato per: " + gameObject.name);
+        isOpen = !isOpen;
+    }
+
 }

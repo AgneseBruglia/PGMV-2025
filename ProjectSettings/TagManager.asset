@@ -14,6 +14,8 @@ TagManager:
   - LEFT_ARM_POS
   - Camera
   - EYES
+  - Cabinet_door
+  - Building_door
   layers:
   - Default
   - TransparentFX
