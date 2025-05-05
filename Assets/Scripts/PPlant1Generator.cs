@@ -27,9 +27,9 @@ public class PPlant1Generator : MonoBehaviour
             predecessor = "F",
             stochasticRules = new List<(string, float)>
             {
-                ("F[+FL]FLLLLL", 0.3f),
-                ("[+FL]FLL[-FL]LLLLLL", 0.4f),
-                ("FL[-FLL[-FL]]LLLLL", 0.3f)
+                ("F[+FL]FLL", 0.3f),
+                ("[+FL]FL[-FL]LL", 0.4f),
+                ("FL[-FL[-FL]]LL", 0.3f)
             }
         };
 
@@ -88,17 +88,29 @@ public class PPlant1Generator : MonoBehaviour
                     branch.transform.localScale = new Vector3(0.1f, length / 2f, 0.1f);
                     branch.transform.Translate(Vector3.up * length / 2f);
                     turtle.Translate(Vector3.up * length);
+                    branch.AddComponent<WindEffect>();
                     break;
                 case 'L':
                     if (leafPrefab != null)
                     {
                         Quaternion offsetRot = Quaternion.Euler(
-                        Random.Range(0f, 360f),
-                        Random.Range(-5f, 5f),
-                        Random.Range(30f, 150f)
+                        Random.Range(-30f, 30f),
+                        Random.Range(-90f, 90f),
+                        Random.Range(-5f, 5f)
                         );
                         Quaternion randomRot = turtle.rotation * offsetRot;
-                        Instantiate(leafPrefab, turtle.position, randomRot, this.transform);
+                        GameObject leaf = Instantiate(leafPrefab, turtle.position, randomRot, this.transform);
+                        Renderer rend = leaf.GetComponentInChildren<Renderer>();
+                        if (rend != null)
+                        {
+                            float minY = rend.bounds.min.y;
+                            float desiredOffsetFromMin = 0.04f;
+                            float pivotYOffset = (leaf.transform.position.y - minY) - desiredOffsetFromMin;
+                            float zOffsetAmount = 0.05f;
+                            leaf.transform.position += leaf.transform.up * pivotYOffset;
+                            leaf.transform.position += leaf.transform.forward * zOffsetAmount;
+                        }
+                        leaf.AddComponent<WindEffect>();
                     }
                     break;
                 case '+':
@@ -139,7 +151,10 @@ public class PPlant1Generator : MonoBehaviour
                             Random.Range(0f, 360f),
                             Random.Range(-20f, 20f)
                         );
-                        Instantiate(flowerPrefab, turtle.position, randomRot, this.transform);           
+                        Vector3 offset = turtle.forward * 0.05f;
+                        Vector3 flowerPosition = turtle.position + offset;
+                        GameObject flower = Instantiate(flowerPrefab, flowerPosition, randomRot, this.transform);
+                        flower.AddComponent<WindEffect>();
                         }
                     }
                     break;
