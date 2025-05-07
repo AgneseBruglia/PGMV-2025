@@ -3,6 +3,7 @@ using UnityEngine;
 public class PlayerView : MonoBehaviour
 {
     public GameObject cameraToToggle;
+    public GameObject player;
     public GameObject eyes;
 
     [SerializeField] private string[] interactableTags;
@@ -14,7 +15,7 @@ public class PlayerView : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked; // Lock cursor to the center of the view
         //Cursor.lockState= CursorLockMode.None;
-        //Cursor.visible= true;
+        Cursor.visible= true;
         cameraToToggle = GameObject.FindWithTag("Camera");
 
     }
@@ -24,19 +25,24 @@ public class PlayerView : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.G))
         {
-            bool hide_eyes = eyes.activeSelf;
-            eyes.SetActive(!hide_eyes);
-
-
-            bool active = cameraToToggle.activeSelf;
-
-            cameraToToggle.SetActive(!active);
-
-            Debug.Log($"Camera is active: '{cameraToToggle.activeSelf}'.");
+            eyes.SetActive(!eyes.activeSelf); // IF WE DONT REMOVE THE EYES, THEY'LL SHOW 
+            cameraToToggle.SetActive(!cameraToToggle.activeSelf);
         }
+
         // Raycast to interact with elements of the scene
         if (Input.GetMouseButtonDown(0)) 
         {
+            Ray ray_pickup = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit_pickup;
+            if (Physics.Raycast(ray_pickup, out hit_pickup, interactLength))
+            {
+                if (hit_pickup.collider.name == "PrefabPickupPlant")
+                {
+                    player.GetComponent<PickUpPlant>().grab(hit_pickup);
+                    return;
+                }
+            }
+
             RaycastHit[] hits= Physics.RaycastAll(transform.position, transform.forward, interactLength);
             if(hits.Length>0 ){
                 foreach(RaycastHit hit in hits){
@@ -44,7 +50,7 @@ public class PlayerView : MonoBehaviour
                     foreach(string tag in interactableTags){
                         if(hit.transform.CompareTag(tag)){
                             Debug.Log("Clicked on 2: "+ hit.collider.name);
-                            hit.transform.SendMessage("OnPlayerInteract");
+                            //hit.transform.SendMessage("OnPlayerInteract");
                             break;
                         }
                     }

@@ -68,7 +68,7 @@ public class PlayerController : MonoBehaviour
             
             // rotate XX
             x_rotate -= y_input;
-            x_rotate = Mathf.Clamp(x_rotate, -30f, 30f); // restric 90�
+            x_rotate = Mathf.Clamp(x_rotate, -45f, 60f); // restrict 45
 
             transform.localRotation = Quaternion.Euler(x_rotate, transform.localRotation.eulerAngles.y, 0f); 
             transform.Rotate(Vector3.up * x_input); // rotate YY
@@ -80,7 +80,6 @@ public class PlayerController : MonoBehaviour
         {
             rb.linearVelocity = Vector3.ClampMagnitude(rb.linearVelocity, max_speed);
         }
-		
 		
         //jets
         if (Input.GetAxis("Vertical") <= 0) // stopped or backwards
@@ -142,12 +141,9 @@ public class PlayerController : MonoBehaviour
             jet_bottom.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
         }
 
-        
         if (transform.position.y < -5) //Fix position if falls belloiw ground
         {
             transform.position = Vector3.zero;
         }
-
     }
-
 }
