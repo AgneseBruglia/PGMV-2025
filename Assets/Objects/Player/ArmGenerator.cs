@@ -34,7 +34,23 @@ public class ArmGenerator : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
-            action();
+            main_pose();
+        }
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            raise_left_arm();
+        }
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            lower_left_arm();
+        }
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            raise_right_arm();
+        }
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            lower_right_arm();
         }
     }
 
@@ -79,22 +95,35 @@ public class ArmGenerator : MonoBehaviour
     }
 
 
-    void action() // on key E  is pressed
+    void raise_left_arm() // on key E  is pressed
     {
-        //elbow left
-        arm_left.transform.GetChild(0).transform.GetChild(1).transform.localRotation =
-            Quaternion.AngleAxis(5 * Mathf.Sin(10 * speed * time), new Vector3(1, 0, 0));
-        //elbow left
-        arm_right.transform.GetChild(0).transform.GetChild(1).transform.localRotation =
-            Quaternion.AngleAxis(5 * Mathf.Sin(10 * speed * time), new Vector3(1, 0, 0));
+        //shoulder left
+        arm_left.transform.GetChild(0).transform.localRotation = Quaternion.Euler(-90, 0, 0);
+        arm_left.transform.GetChild(0).transform.GetChild(1).transform.localRotation = Quaternion.Euler(-40, -15, 0);
+        arm_left.transform.GetChild(0).transform.GetChild(1).transform.GetChild(1).transform.localRotation = Quaternion.Euler(0, 200, 0);
+    }
+    void lower_left_arm() // on key E  is pressed
+    {
+        //shoulder left
+        arm_left.transform.GetChild(0).transform.localRotation = Quaternion.Euler(320, 0, 0);
+        arm_left.transform.GetChild(0).transform.GetChild(1).transform.localRotation = Quaternion.Euler(320, 0, 0);
+        arm_left.transform.GetChild(0).transform.GetChild(1).transform.GetChild(1).transform.localRotation = Quaternion.Euler(0, 180, 0);
+    }
 
-        //hand left
-        arm_left.transform.GetChild(0).transform.GetChild(1).transform.GetChild(1).transform.localRotation =
-            Quaternion.AngleAxis(180 * Mathf.Sin(speed * time + Mathf.PI / 4), new Vector3(0, 1, 0));
 
-        //hand right
-        arm_right.transform.GetChild(0).transform.GetChild(1).transform.GetChild(1).transform.localRotation =
-            Quaternion.AngleAxis(180 * Mathf.Sin(speed * time + Mathf.PI / 4), new Vector3(0, 1, 0));
+    void raise_right_arm() // on key E  is pressed
+    {
+        //shoulder left
+        arm_right.transform.GetChild(0).transform.localRotation = Quaternion.Euler(-90, 0, 0);
+        arm_right.transform.GetChild(0).transform.GetChild(1).transform.localRotation = Quaternion.Euler(-40, 15, 0);
+        arm_right.transform.GetChild(0).transform.GetChild(1).transform.GetChild(1).transform.localRotation = Quaternion.Euler(0, -200, 0);
+    }
+    void lower_right_arm() // on key E  is pressed
+    {
+        //shoulder left
+        arm_right.transform.GetChild(0).transform.localRotation = Quaternion.Euler(320, 0, 0);
+        arm_right.transform.GetChild(0).transform.GetChild(1).transform.localRotation = Quaternion.Euler(320, 0, 0);
+        arm_right.transform.GetChild(0).transform.GetChild(1).transform.GetChild(1).transform.localRotation = Quaternion.Euler(0, 180, 0);
     }
 
     public void main_pose()
@@ -117,7 +146,7 @@ public class ArmGenerator : MonoBehaviour
         arm_left.transform.GetChild(0).transform.GetChild(1).transform.localRotation = Quaternion.Euler(-40, -15, 0);
         arm_left.transform.GetChild(0).transform.GetChild(1).transform.GetChild(1).transform.localRotation = Quaternion.Euler(0, 200, 0);
 
-        //shoulder left
+        //shoulder right
         arm_right.transform.GetChild(0).transform.localRotation = Quaternion.Euler(-90, 0, 0);
         arm_right.transform.GetChild(0).transform.GetChild(1).transform.localRotation = Quaternion.Euler(-40, 15, 0);
         arm_right.transform.GetChild(0).transform.GetChild(1).transform.GetChild(1).transform.localRotation = Quaternion.Euler(0, -200, 0);
