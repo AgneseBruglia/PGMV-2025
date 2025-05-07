@@ -1,0 +1,10 @@
+[
+    {
+      "predecessor": "F",
+      "successors": [
+        { "successor": "[+FL][+FL][-FLL]", "probability": 0.5 },
+        { "successor": "F{-FL]F[-FLL]", "probability": 0.2 },
+        { "successor": "[+FL][+FL][+FL][-FL]", "probability": 0.3 }
+      ]
+    }
+  ]

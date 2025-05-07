@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PPlant1Generator : MonoBehaviour
+public class PlantGenerator : MonoBehaviour
 {
     [Header("Prefabs")]
     public GameObject branchPrefab;
@@ -12,33 +12,23 @@ public class PPlant1Generator : MonoBehaviour
     [Header("L-System Settings")]
     public string axiom = "F";
     public int iterations = 3;
+    public TextAsset ruleConfigFile;
 
     [Header("Flower Settings")]
     [Range(0f, 1f)]
     public float flowerSpawnProbability = 0.25f;
-    
+
     private Dictionary<string, LSystemRule> rules = new Dictionary<string, LSystemRule>();
 
     void Start()
     {
-        // Stochastic rules definition 
-        rules["F"] = new LSystemRule
-        {
-            predecessor = "F",
-            stochasticRules = new List<(string, float)>
-            {
-                ("F[+FL]FLL", 0.3f),
-                ("[+FL]FL[-FL]LL", 0.4f),
-                ("FL[-FL[-FL]]LL", 0.3f)
-            }
-        };
+        LoadRulesFromJSON();
 
-        Vector3 startPosition = this.transform.position;
+        Vector3 startPosition = transform.position;
 
         if (potPrefab != null)
         {
-            GameObject pot = Instantiate(potPrefab, startPosition, Quaternion.identity);
-            pot.transform.SetParent(this.transform);
+            GameObject pot = Instantiate(potPrefab, startPosition, Quaternion.identity, transform);
             Renderer rend = pot.GetComponentInChildren<Renderer>();
             if (rend != null)
             {
@@ -48,8 +38,35 @@ public class PPlant1Generator : MonoBehaviour
         }
 
         string lSystem = GenerateLSystem(axiom, rules, iterations);
-        Debug.Log("L-System finale: " + lSystem);
+        Debug.Log("Final L-System: " + lSystem);
         DrawLSystem(lSystem, startPosition);
+    }
+
+    void LoadRulesFromJSON()
+    {
+        if (ruleConfigFile == null)
+        {
+            Debug.LogError("Rules not found: assign a JSON file to 'ruleConfigFile'");
+            return;
+        }
+
+        LSystemRuleSet[] ruleSets = JsonHelper.FromJson<LSystemRuleSet>(ruleConfigFile.text);
+        rules.Clear();
+
+        foreach (var ruleSet in ruleSets)
+        {
+            List<(string, float)> converted = new List<(string, float)>();
+            foreach (var entry in ruleSet.successors)
+            {
+                converted.Add((entry.successor, entry.probability));
+            }
+
+            rules[ruleSet.predecessor] = new LSystemRule
+            {
+                predecessor = ruleSet.predecessor,
+                stochasticRules = converted
+            };
+        }
     }
 
     string GenerateLSystem(string axiom, Dictionary<string, LSystemRule> rules, int iterations)
@@ -76,7 +93,6 @@ public class PPlant1Generator : MonoBehaviour
         Stack<TransformInfo> transformStack = new Stack<TransformInfo>();
         Transform turtle = new GameObject("Turtle").transform;
         turtle.position = startPosition;
-
         foreach (char c in lsystem)
         {
             switch (c)
@@ -114,7 +130,6 @@ public class PPlant1Generator : MonoBehaviour
                     }
                     break;
                 case '+':
-                    // Casual rotation of the branches
                     int axisPlus = Random.Range(0, 3);
                     float anglePlus = Random.Range(20f, 60f);
                     switch (axisPlus)
@@ -143,18 +158,17 @@ public class PPlant1Generator : MonoBehaviour
                         TransformInfo ti = transformStack.Pop();
                         turtle.position = ti.position;
                         turtle.rotation = ti.rotation;
-                        // Adds flowers
                         if (flowerPrefab != null && Random.value < flowerSpawnProbability)
                         {
-                        Quaternion randomRot = turtle.rotation * Quaternion.Euler(
-                            Random.Range(-20f, 20),
-                            Random.Range(0f, 360f),
-                            Random.Range(-20f, 20f)
-                        );
-                        Vector3 offset = turtle.forward * 0.05f;
-                        Vector3 flowerPosition = turtle.position + offset;
-                        GameObject flower = Instantiate(flowerPrefab, flowerPosition, randomRot, this.transform);
-                        flower.AddComponent<WindEffect>();
+                            Quaternion randomRot = turtle.rotation * Quaternion.Euler(
+                                Random.Range(-20f, 20),
+                                Random.Range(0f, 360f),
+                                Random.Range(-20f, 20f)
+                            );
+                            Vector3 offset = turtle.forward * 0.05f;
+                            Vector3 flowerPosition = turtle.position + offset;
+                            GameObject flower = Instantiate(flowerPrefab, flowerPosition, randomRot, this.transform);
+                            flower.AddComponent<WindEffect>();
                         }
                     }
                     break;
@@ -191,4 +205,19 @@ public class PPlant1Generator : MonoBehaviour
             return predecessor;
         }
     }
+}
+
+// JSON parsing classes
+[System.Serializable]
+public class LSystemRuleEntry
+{
+    public string successor;
+    public float probability;
+}
+
+[System.Serializable]
+public class LSystemRuleSet
+{
+    public string predecessor;
+    public List<LSystemRuleEntry> successors;
 }
