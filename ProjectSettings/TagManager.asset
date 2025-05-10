@@ -16,6 +16,7 @@ TagManager:
   - EYES
   - Cabinet_door
   - Building_door
+  - Plant
   layers:
   - Default
   - TransparentFX

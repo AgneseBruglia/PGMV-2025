@@ -22,42 +22,41 @@ public class PlayerView : MonoBehaviour
 
     // Update is called once per frame
     void Update()
+{
+    if (Input.GetKeyDown(KeyCode.G))
     {
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            eyes.SetActive(!eyes.activeSelf); // IF WE DONT REMOVE THE EYES, THEY'LL SHOW 
-            cameraToToggle.SetActive(!cameraToToggle.activeSelf);
-        }
+        eyes.SetActive(!eyes.activeSelf); // Toggle eyes visibility
+        cameraToToggle.SetActive(!cameraToToggle.activeSelf); // Toggle camera
+    }
 
-        // Raycast to interact with elements of the scene
-        if (Input.GetMouseButtonDown(0)) 
+    if (Input.GetMouseButtonDown(0)) 
+    {
+        // Lancia un raycast dalla camera/occhi nella direzione in cui guarda
+        Ray ray = new Ray(eyes.transform.position, eyes.transform.forward);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, interactLength))
         {
-            Ray ray_pickup = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit_pickup;
-            if (Physics.Raycast(ray_pickup, out hit_pickup, interactLength))
+            Debug.Log("Hit: " + hit.collider.name + " with tag: " + hit.collider.tag);
+
+            if (hit.transform.CompareTag("Plant"))
             {
-                if (hit_pickup.collider.name == "PrefabPickupPlant")
-                {
-                    player.GetComponent<PickUpPlant>().grab(hit_pickup);
-                    return;
-                }
+                player.GetComponent<PickUpPlant>().grab(hit);
+                //hit.transform.SendMessage("grab", hit, SendMessageOptions.DontRequireReceiver);
+                return;
             }
-
-            RaycastHit[] hits= Physics.RaycastAll(transform.position, transform.forward, interactLength);
-            if(hits.Length>0 ){
-                foreach(RaycastHit hit in hits){
-                    Debug.Log("Clicked on 1: "+ hit.collider.name);
-                    foreach(string tag in interactableTags){
-                        if(hit.transform.CompareTag(tag)){
-                            Debug.Log("Clicked on 2: "+ hit.collider.name);
-                            //hit.transform.SendMessage("OnPlayerInteract");
-                            break;
-                        }
-                    }
+            foreach (string tag in interactableTags)
+            {
+                if (hit.transform.CompareTag(tag))
+                {
+                    hit.transform.SendMessage("OnPlayerInteract", SendMessageOptions.DontRequireReceiver);
+                    break;
                 }
             }
         }
     }
+}
+
 
     private void OnDrawGizmosSelected(){
         Gizmos.color= Color.blue;
