@@ -16,7 +16,7 @@ public class ArmGenerator : MonoBehaviour
     private GameObject hand_right;
 
     public float speed = 5;
-    private float time = 0;
+    //private float time = 0;
 
     void Awake()
     {

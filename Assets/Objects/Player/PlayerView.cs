@@ -22,40 +22,40 @@ public class PlayerView : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-{
-    if (Input.GetKeyDown(KeyCode.G))
     {
-        eyes.SetActive(!eyes.activeSelf); // Toggle eyes visibility
-        cameraToToggle.SetActive(!cameraToToggle.activeSelf); // Toggle camera
-    }
-
-    if (Input.GetMouseButtonDown(0)) 
-    {
-        // Lancia un raycast dalla camera/occhi nella direzione in cui guarda
-        Ray ray = new Ray(eyes.transform.position, eyes.transform.forward);
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit, interactLength))
+        if (Input.GetKeyDown(KeyCode.G))
         {
-            Debug.Log("Hit: " + hit.collider.name + " with tag: " + hit.collider.tag);
+            eyes.SetActive(!eyes.activeSelf); // Toggle eyes visibility
+            cameraToToggle.SetActive(!cameraToToggle.activeSelf); // Toggle camera
+        }
 
-            if (hit.transform.CompareTag("Plant"))
+        if (Input.GetMouseButtonDown(0)) 
+        {
+            // Lancia un raycast dalla camera/occhi nella direzione in cui guarda
+            Ray ray = new Ray(eyes.transform.position, eyes.transform.forward);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit, interactLength))
             {
-                player.GetComponent<PickUpPlant>().grab(hit);
-                //hit.transform.SendMessage("grab", hit, SendMessageOptions.DontRequireReceiver);
-                return;
-            }
-            foreach (string tag in interactableTags)
-            {
-                if (hit.transform.CompareTag(tag))
+                Debug.Log("Hit: " + hit.collider.name + " with tag: " + hit.collider.tag);
+
+                if (hit.transform.CompareTag("Plant") || hit.collider.name == "Plant"  || hit.collider.name == "PrefabPickupPlant")
                 {
-                    hit.transform.SendMessage("OnPlayerInteract", SendMessageOptions.DontRequireReceiver);
-                    break;
+                    player.GetComponent<PickUpPlant>().grab(hit);
+                    //hit.transform.SendMessage("grab", hit, SendMessageOptions.DontRequireReceiver);
+                    return;
+                }
+                foreach (string tag in interactableTags)
+                {
+                    if (hit.transform.CompareTag(tag))
+                    {
+                        hit.transform.SendMessage("OnPlayerInteract", SendMessageOptions.DontRequireReceiver);
+                        break;
+                    }
                 }
             }
         }
     }
-}
 
 
     private void OnDrawGizmosSelected(){

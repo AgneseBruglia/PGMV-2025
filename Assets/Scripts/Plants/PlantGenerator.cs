@@ -45,7 +45,7 @@ public class PlantGenerator : MonoBehaviour
         plant.transform.SetParent(this.transform);
         DrawLSystem(lSystem, startPosition);
         PlantInteraction plantInteraction = plant.AddComponent<PlantInteraction>();
-        plantInteraction.uiController = plantUIController.GetComponent<PlantUIController>();
+        //plantInteraction.uiController = plantUIController.GetComponent<PlantUIController>();
     }
 
     void LoadRulesFromJSON()
