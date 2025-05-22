@@ -8,6 +8,8 @@ MonoImporter:
   - leafPrefab: {fileID: 1958209032795165579, guid: 03162bfeeb2ece04bb0350d3ae5a216d, type: 3}
   - flowerPrefab: {fileID: 289065777163065808, guid: 0fbd2674f4531e546866a94ddf6085ab, type: 3}
   - potPrefab: {fileID: 5430735313945226890, guid: d620ca9f74fc4364b8afb9317a92111d, type: 3}
+  - ruleConfigFile: {instanceID: 0}
+  - plantUIController: {fileID: 2363323591814662842, guid: fefb0e5fc4d9a6340abd45fa8d746407, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

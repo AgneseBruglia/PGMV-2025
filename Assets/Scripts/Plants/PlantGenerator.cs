@@ -16,11 +16,13 @@ public class PlantGenerator : MonoBehaviour
 
     [Header("Plant Settings")]
     [Range(0.1f, 10f)]
-    public float scale = 1f; 
+    public float scale = 1f;
     public float delta = 20f;
     [Range(0f, 1f)]
     public float flowerSpawnProbability = 0.25f;
-    public GameObject plantUIController;
+
+    [Header("Plant UI Controller")]
+    public PlantUIController plantUIController;
 
     private Dictionary<string, LSystemRule> rules = new Dictionary<string, LSystemRule>();
 
@@ -28,9 +30,16 @@ public class PlantGenerator : MonoBehaviour
     {
         LoadRulesFromJSON();
         Vector3 startPosition = transform.position;
+
+        string lSystem = GenerateLSystem(axiom, rules, iterations);
+        Debug.Log("Final L-System: " + lSystem);
+
+        GameObject plant = new GameObject("Plant");
+        plant.transform.SetParent(this.transform);
+
         if (potPrefab != null)
         {
-            GameObject pot = Instantiate(potPrefab, startPosition, Quaternion.identity, transform);
+            GameObject pot = Instantiate(potPrefab, startPosition, Quaternion.identity, plant.transform);
             pot.transform.localScale *= scale;
             Renderer rend = pot.GetComponentInChildren<Renderer>();
             if (rend != null)
@@ -38,14 +47,48 @@ public class PlantGenerator : MonoBehaviour
                 float potHeight = rend.bounds.size.y;
                 startPosition += Vector3.up * potHeight;
             }
+        }        
+
+        // Draws the plant
+        DrawLSystem(lSystem, startPosition, plant.transform);
+
+        // Calculates bounds for the boxcollider
+        Renderer[] renderers = plant.GetComponentsInChildren<Renderer>();
+        Bounds combinedBounds = new Bounds();
+        bool initialized = false;
+
+        foreach (Renderer rend in renderers)
+        {
+            if (!initialized)
+            {
+                combinedBounds = rend.bounds;
+                initialized = true;
+            }
+            else
+            {
+                combinedBounds.Encapsulate(rend.bounds);
+            }
         }
-        string lSystem = GenerateLSystem(axiom, rules, iterations);
-        Debug.Log("Final L-System: " + lSystem);
-        GameObject plant = new GameObject("Plant");
-        plant.transform.SetParent(this.transform);
-        DrawLSystem(lSystem, startPosition);
-        PlantInteraction plantInteraction = plant.AddComponent<PlantInteraction>();
-        //plantInteraction.uiController = plantUIController.GetComponent<PlantUIController>();
+
+        if (initialized)
+        {
+            BoxCollider box = plant.AddComponent<BoxCollider>();
+
+            // Convert bounds center and size from world space to local space
+            box.center = plant.transform.InverseTransformPoint(combinedBounds.center);
+            box.size = plant.transform.InverseTransformVector(combinedBounds.size);
+            box.size *= 0.9f;
+
+            box.isTrigger = true;
+
+            Rigidbody rb = plant.AddComponent<Rigidbody>();
+            rb.useGravity = false;
+            rb.isKinematic = true;
+        }
+        else
+        {
+            Debug.LogWarning("No renderers found to calculate bounds.");
+        }
     }
 
     void LoadRulesFromJSON()
@@ -55,6 +98,7 @@ public class PlantGenerator : MonoBehaviour
             Debug.LogError("Rules not found: assign a JSON file to 'ruleConfigFile'");
             return;
         }
+
         LSystemRuleSet[] ruleSets = JsonHelper.FromJson<LSystemRuleSet>(ruleConfigFile.text);
         rules.Clear();
         foreach (var ruleSet in ruleSets)
@@ -70,6 +114,7 @@ public class PlantGenerator : MonoBehaviour
                 stochasticRules = converted
             };
         }
+
         if (string.IsNullOrEmpty(axiom) && ruleSets.Length > 0)
         {
             axiom = ruleSets[0].predecessor;
@@ -95,18 +140,18 @@ public class PlantGenerator : MonoBehaviour
         return current;
     }
 
-    void DrawLSystem(string lsystem, Vector3 startPosition)
+    void DrawLSystem(string lsystem, Vector3 startPosition, Transform parent)
     {
         Stack<TransformInfo> transformStack = new Stack<TransformInfo>();
         Transform turtle = new GameObject("Turtle").transform;
         turtle.position = startPosition;
+
         foreach (char c in lsystem)
         {
             switch (c)
             {
                 case 'F':
-                    GameObject branch = Instantiate(branchPrefab, turtle.position, turtle.rotation);
-                    branch.transform.SetParent(this.transform);
+                    GameObject branch = Instantiate(branchPrefab, turtle.position, turtle.rotation, parent);
                     branch.transform.localScale *= scale;
                     float length = branch.transform.localScale.y;
                     branch.transform.Translate(Vector3.up * length / 2f);
@@ -122,7 +167,7 @@ public class PlantGenerator : MonoBehaviour
                             Random.Range(-5f, 5f)
                         );
                         Quaternion randomRot = turtle.rotation * offsetRot;
-                        GameObject leaf = Instantiate(leafPrefab, turtle.position, randomRot, this.transform);
+                        GameObject leaf = Instantiate(leafPrefab, turtle.position, randomRot, parent);
                         leaf.transform.localScale *= scale;
                         Renderer rend = leaf.GetComponentInChildren<Renderer>();
                         if (rend != null)
@@ -167,13 +212,13 @@ public class PlantGenerator : MonoBehaviour
                         if (flowerPrefab != null && Random.value < flowerSpawnProbability)
                         {
                             Quaternion randomRot = turtle.rotation * Quaternion.Euler(
-                                Random.Range(-20f, 20),
-                                Random.Range(0f, 360f),
-                                Random.Range(-20f, 20f)
+                                Random.Range(-180f, 180f),
+                                Random.Range(-180f, 180f),
+                                Random.Range(-180f, 180f)
                             );
                             Vector3 offset = turtle.forward * 0.05f;
                             Vector3 flowerPosition = turtle.position + offset;
-                            GameObject flower = Instantiate(flowerPrefab, flowerPosition, randomRot, this.transform);
+                            GameObject flower = Instantiate(flowerPrefab, flowerPosition, randomRot, parent);
                             flower.transform.localScale *= scale;
                             flower.AddComponent<WindEffect>();
                         }
@@ -181,6 +226,7 @@ public class PlantGenerator : MonoBehaviour
                     break;
             }
         }
+
         Destroy(turtle.gameObject);
     }
 
@@ -212,19 +258,18 @@ public class PlantGenerator : MonoBehaviour
             return predecessor;
         }
     }
-}
 
-// JSON parsing classes
-[System.Serializable]
-public class LSystemRuleEntry
-{
-    public string successor;
-    public float probability;
-}
+    [System.Serializable]
+    public class LSystemRuleSet
+    {
+        public string predecessor;
+        public LSystemSuccessor[] successors;
 
-[System.Serializable]
-public class LSystemRuleSet
-{
-    public string predecessor;
-    public List<LSystemRuleEntry> successors;
+        [System.Serializable]
+        public class LSystemSuccessor
+        {
+            public string successor;
+            public float probability;
+        }
+    }
 }

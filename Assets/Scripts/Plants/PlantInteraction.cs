@@ -2,25 +2,17 @@ using UnityEngine;
 
 public class PlantInteraction : MonoBehaviour
 {
-    private Camera cam;
     public PlantUIController uiController;
 
-    void Start()
-    {
-        cam = Camera.main;
-    }
+    public event System.Action OnPlantClicked;
 
     void OnMouseDown()
     {
-        RaycastHit hit;
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-
-        if (Physics.Raycast(ray, out hit))
+        if (uiController != null)
         {
-            if (hit.transform == transform) // Se la pianta è stata cliccata
-            {
-                uiController.CreatePlantUI(); // Crea la UI per questa pianta
-            }
+            uiController.TogglePlantUI();
         }
+
+        OnPlantClicked?.Invoke();
     }
 }
