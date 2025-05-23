@@ -34,12 +34,12 @@ public class PlantGenerator : MonoBehaviour
         string lSystem = GenerateLSystem(axiom, rules, iterations);
         Debug.Log("Final L-System: " + lSystem);
 
-        GameObject plant = new GameObject("Plant");
-        plant.transform.SetParent(this.transform);
+        //GameObject plant = new GameObject("Plant");
+        //plant.transform.SetParent(this.transform);
 
         if (potPrefab != null)
         {
-            GameObject pot = Instantiate(potPrefab, startPosition, Quaternion.identity, plant.transform);
+            GameObject pot = Instantiate(potPrefab, startPosition, Quaternion.identity, gameObject.transform);
             pot.transform.localScale *= scale;
             Renderer rend = pot.GetComponentInChildren<Renderer>();
             if (rend != null)
@@ -50,10 +50,10 @@ public class PlantGenerator : MonoBehaviour
         }        
 
         // Draws the plant
-        DrawLSystem(lSystem, startPosition, plant.transform);
+        DrawLSystem(lSystem, startPosition, gameObject.transform);
 
         // Calculates bounds for the boxcollider
-        Renderer[] renderers = plant.GetComponentsInChildren<Renderer>();
+        Renderer[] renderers = gameObject.GetComponentsInChildren<Renderer>();
         Bounds combinedBounds = new Bounds();
         bool initialized = false;
 
@@ -72,18 +72,18 @@ public class PlantGenerator : MonoBehaviour
 
         if (initialized)
         {
-            BoxCollider box = plant.AddComponent<BoxCollider>();
+            BoxCollider box = gameObject.AddComponent<BoxCollider>();
 
             // Convert bounds center and size from world space to local space
-            box.center = plant.transform.InverseTransformPoint(combinedBounds.center);
-            box.size = plant.transform.InverseTransformVector(combinedBounds.size);
+            box.center = gameObject.transform.InverseTransformPoint(combinedBounds.center);
+            box.size = gameObject.transform.InverseTransformVector(combinedBounds.size);
             box.size *= 0.9f;
 
-            box.isTrigger = true;
+            box.isTrigger = false;
 
-            Rigidbody rb = plant.AddComponent<Rigidbody>();
-            rb.useGravity = false;
-            rb.isKinematic = true;
+            Rigidbody rb = gameObject.AddComponent<Rigidbody>();
+            rb.useGravity = true;
+            rb.isKinematic = false;
         }
         else
         {

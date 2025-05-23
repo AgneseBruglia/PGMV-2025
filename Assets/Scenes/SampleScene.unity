@@ -15098,7 +15098,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 490396873894618446, guid: 8c5018386ad71624aafdaf270f1aa7b5, type: 3}
       propertyPath: m_Name
-      value: Plant (1)
+      value: Plant1
       objectReference: {fileID: 0}
     - target: {fileID: 892958891056111798, guid: 8c5018386ad71624aafdaf270f1aa7b5, type: 3}
       propertyPath: scale
@@ -18848,7 +18848,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 490396873894618446, guid: 8c5018386ad71624aafdaf270f1aa7b5, type: 3}
       propertyPath: m_Name
-      value: Plant
+      value: Plant3
+      objectReference: {fileID: 0}
+    - target: {fileID: 490396873894618446, guid: 8c5018386ad71624aafdaf270f1aa7b5, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 8735166050594173865, guid: 8c5018386ad71624aafdaf270f1aa7b5, type: 3}
       propertyPath: m_LocalPosition.x
