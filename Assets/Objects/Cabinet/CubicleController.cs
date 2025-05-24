@@ -7,12 +7,14 @@ public class CubicleController : MonoBehaviour
     public float speed;
     public bool open; //is opened
     public bool active; //action active 
+    public bool is_action; //action active 
 
     private float open_angle;
     private Quaternion open_rotation;
     private Quaternion close_rotation;
     private float rot_yy;
     private float rot_zz;
+    private float time = 0f;
 
     void Awake() //Or OnEnable()
     {
@@ -23,6 +25,7 @@ public class CubicleController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        is_action = false;
         active = true;
         open = false;
         speed = 2.0f;
@@ -48,25 +51,32 @@ public class CubicleController : MonoBehaviour
             return;
         }
 
-            if (!active)
+        if (!active)
         {
             return;
         }
 
-        if (Input.GetKeyDown(KeyCode.E)) // "E" to open drowers 
-        {
-            open = !open;
 
+        if (time < speed)
+        {
             if (open)
             {
-                // Dampen towards the target rotation
-                door.rotation = Quaternion.Slerp(door.rotation, open_rotation, Time.deltaTime * speed);
+                time += Time.deltaTime * speed;
+                door.localRotation = Quaternion.Lerp(close_rotation, open_rotation, time);
             }
             else
             {
-                // Dampen towards the target rotation
-                door.rotation = Quaternion.Slerp(door.rotation, close_rotation, Time.deltaTime * speed);
+                time += Time.deltaTime * speed;
+                door.localRotation = Quaternion.Lerp(open_rotation, close_rotation, time);
             }
+
+        }
+
+        if (time >= speed && Input.GetKeyDown(KeyCode.E)) // "E" to open drowers 
+        {
+            open = !open;
+
+            time = 0;
         }
     }
 }
