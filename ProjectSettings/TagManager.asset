@@ -17,6 +17,8 @@ TagManager:
   - Cabinet_door
   - Building_door
   - Plant
+  - JETS
+  - BOTTOM_JET
   layers:
   - Default
   - TransparentFX

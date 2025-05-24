@@ -35,6 +35,8 @@ public class ArmGenerator : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E))
         {
             main_pose();
+            arm_right.GetComponent<AudioSource>().Play();
+            arm_left.GetComponent<AudioSource>().Play();
         }
         if (Input.GetKeyDown(KeyCode.I))
         {
@@ -101,6 +103,8 @@ public class ArmGenerator : MonoBehaviour
         arm_left.transform.GetChild(0).transform.localRotation = Quaternion.Euler(-90, 0, 0);
         arm_left.transform.GetChild(0).transform.GetChild(1).transform.localRotation = Quaternion.Euler(-40, -15, 0);
         arm_left.transform.GetChild(0).transform.GetChild(1).transform.GetChild(1).transform.localRotation = Quaternion.Euler(0, 200, 0);
+
+        arm_left.GetComponent<AudioSource>().Play();
     }
     void lower_left_arm() // on key E  is pressed
     {
@@ -108,6 +112,7 @@ public class ArmGenerator : MonoBehaviour
         arm_left.transform.GetChild(0).transform.localRotation = Quaternion.Euler(320, 0, 0);
         arm_left.transform.GetChild(0).transform.GetChild(1).transform.localRotation = Quaternion.Euler(320, 0, 0);
         arm_left.transform.GetChild(0).transform.GetChild(1).transform.GetChild(1).transform.localRotation = Quaternion.Euler(0, 180, 0);
+        arm_left.GetComponent<AudioSource>().Play();
     }
 
 
@@ -117,6 +122,7 @@ public class ArmGenerator : MonoBehaviour
         arm_right.transform.GetChild(0).transform.localRotation = Quaternion.Euler(-90, 0, 0);
         arm_right.transform.GetChild(0).transform.GetChild(1).transform.localRotation = Quaternion.Euler(-40, 15, 0);
         arm_right.transform.GetChild(0).transform.GetChild(1).transform.GetChild(1).transform.localRotation = Quaternion.Euler(0, -200, 0);
+        arm_right.GetComponent<AudioSource>().Play();
     }
     void lower_right_arm() // on key E  is pressed
     {
@@ -124,6 +130,7 @@ public class ArmGenerator : MonoBehaviour
         arm_right.transform.GetChild(0).transform.localRotation = Quaternion.Euler(320, 0, 0);
         arm_right.transform.GetChild(0).transform.GetChild(1).transform.localRotation = Quaternion.Euler(320, 0, 0);
         arm_right.transform.GetChild(0).transform.GetChild(1).transform.GetChild(1).transform.localRotation = Quaternion.Euler(0, 180, 0);
+        arm_right.GetComponent<AudioSource>().Play();
     }
 
     public void main_pose()
@@ -150,6 +157,8 @@ public class ArmGenerator : MonoBehaviour
         arm_right.transform.GetChild(0).transform.localRotation = Quaternion.Euler(-90, 0, 0);
         arm_right.transform.GetChild(0).transform.GetChild(1).transform.localRotation = Quaternion.Euler(-40, 15, 0);
         arm_right.transform.GetChild(0).transform.GetChild(1).transform.GetChild(1).transform.localRotation = Quaternion.Euler(0, -200, 0);
+        arm_right.GetComponent<AudioSource>().Play();
+        arm_left.GetComponent<AudioSource>().Play();
     }
 
 

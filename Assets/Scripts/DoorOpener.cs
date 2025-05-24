@@ -45,6 +45,7 @@ public class DoorOpener : MonoBehaviour
     {
         Debug.Log("OnPlayerInteract chiamato per: " + gameObject.name);
         isOpen = !isOpen;
+        GetComponent<AudioSource>().Play();
     }
 
 }

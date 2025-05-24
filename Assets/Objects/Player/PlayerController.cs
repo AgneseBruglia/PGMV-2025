@@ -13,9 +13,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] bool use_physics = true;
     private Rigidbody rb;
 	
-   [SerializeField] GameObject jet_bottom;
-   [SerializeField] GameObject jet_back_left;
-   [SerializeField] GameObject jet_back_right;
+    [SerializeField] GameObject jet_bottom;
+    [SerializeField] GameObject jet_back_left;
+    [SerializeField] GameObject jet_back_right;
+    [SerializeField] GameObject jets;
 
     public float gravity_force = -20f;
 
@@ -24,6 +25,14 @@ public class PlayerController : MonoBehaviour
 
     private float x_rotate = 0f;
 
+    void Awake()
+    {
+        jet_bottom = GameObject.FindWithTag("JET_BOTTOM");
+        jet_back_left = GameObject.FindWithTag("JET_BACK_LEFT");
+        jet_back_right = GameObject.FindWithTag("JET_BACK_RIGHT");
+        jets = GameObject.FindWithTag("JETS");
+    }
+
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked; // Lock cursor to the center of the view
@@ -31,10 +40,6 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         rb.linearDamping = 0; // config for falling , drag
 	
-        jet_bottom     = GameObject.FindWithTag("JET_BOTTOM");
-        jet_back_left  = GameObject.FindWithTag("JET_BACK_LEFT");
-        jet_back_right = GameObject.FindWithTag("JET_BACK_RIGHT");
-
         jet_bottom.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f); 
         jet_back_left.transform.localScale = new Vector3(0.0f, 0.0f, 0.0f); 
         jet_back_right.transform.localScale = new Vector3(0.0f, 0.0f, 0.0f); 
@@ -87,6 +92,7 @@ public class PlayerController : MonoBehaviour
             //Debug.Log("(" + Input.GetAxis("Horizontal") + ", " + Input.GetAxis("Vertical") + ")");
             jet_back_left.transform.localScale = new Vector3(0, 0, 0);
             jet_back_right.transform.localScale = new Vector3(0, 0, 0);
+            jets.GetComponent<AudioSource>().Stop();
         }
         else
         {
@@ -106,6 +112,8 @@ public class PlayerController : MonoBehaviour
             {
                 jet_back_left.transform.localScale = new Vector3(0.3f, Input.GetAxis("Vertical") * 0.3f, 0.3f);
                 jet_back_right.transform.localScale = new Vector3(0.3f, Input.GetAxis("Vertical") * 0.3f, 0.3f);
+                jets.GetComponent<AudioSource>().Play();
+                
             }
 
             // full size = new Vector3(0.3f, 0.3f, 0.3f) (max)
@@ -117,6 +125,7 @@ public class PlayerController : MonoBehaviour
         //Jump
         if (Input.GetKeyDown(KeyCode.Space) && transform.position.y < 50)
         {
+            jets.GetComponent<AudioSource>().Play();
             //Physics.gravity = new Vector3(0, -9.81f, 0);
             // We need the vector to have move force than the gravity, ForceMode is applied against mass
             rb.AddForce(Vector3.up * jump_force * 9.81f * rb.mass, ForceMode.Impulse);
@@ -124,21 +133,25 @@ public class PlayerController : MonoBehaviour
         }
         else if (Input.GetKey(KeyCode.Space)) // In Air Acelaration
         {
+
+            jets.GetComponent<AudioSource>().Play();
             //Physics.gravity = new Vector3(0, -9.81f, 0);
             // We need the vector to have move force than the gravity, ForceMode is applied against mass
             rb.AddForce(Vector3.up * speed * 9.81f * rb.mass, ForceMode.Acceleration);
 			jet_bottom.transform.localScale = new Vector3(0.3f, 0.6f, 0.3f);
         }       
         else if (Input.GetKeyUp(KeyCode.Space) && transform.position.y < 50) // In Air decelaration
-        {
+        { 
+            jets.GetComponent<AudioSource>().Stop();
             //Physics.gravity = new Vector3(0, -9.81f, 0);
             // We need the vector to have move force than the gravity, ForceMode is applied against mass
             rb.AddForce(Vector3.down * fall_force, ForceMode.Impulse);
 			jet_bottom.transform.localScale = new Vector3(0.3f, 0, 0.3f);
         }
-        else 
+        else
         {
             jet_bottom.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
+            jets.GetComponent<AudioSource>().Stop();
         }
 
         if (transform.position.y < -5) //Fix position if falls belloiw ground
