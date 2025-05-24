@@ -22,7 +22,7 @@ public class PlantGenerator : MonoBehaviour
     public float flowerSpawnProbability = 0.25f;
 
     [Header("Plant UI Controller")]
-    public PlantUIController plantUIController;
+    public UIController plantUIController;
 
     private Dictionary<string, LSystemRule> rules = new Dictionary<string, LSystemRule>();
 
@@ -33,9 +33,6 @@ public class PlantGenerator : MonoBehaviour
 
         string lSystem = GenerateLSystem(axiom, rules, iterations);
         Debug.Log("Final L-System: " + lSystem);
-
-        //GameObject plant = new GameObject("Plant");
-        //plant.transform.SetParent(this.transform);
 
         if (potPrefab != null)
         {
@@ -84,6 +81,8 @@ public class PlantGenerator : MonoBehaviour
             Rigidbody rb = gameObject.AddComponent<Rigidbody>();
             rb.useGravity = true;
             rb.isKinematic = false;
+
+            gameObject.tag = "Plant";
         }
         else
         {

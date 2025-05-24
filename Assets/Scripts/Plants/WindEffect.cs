@@ -14,7 +14,9 @@ public class WindEffect : MonoBehaviour
 
     void Update()
     {
+        // Checks whether the wind effect is on or not
         if (!windEnabled) return;
+
         float angle = Mathf.Sin(Time.time * frequency + transform.GetInstanceID()) * amplitude;
         transform.localRotation = Quaternion.Euler(initialRotation + new Vector3(0, angle, 0));
     }
