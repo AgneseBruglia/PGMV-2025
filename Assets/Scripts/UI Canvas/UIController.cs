@@ -19,6 +19,7 @@ public class UIController : MonoBehaviour
         CloseUI();
     }
 
+    /*
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Tab))
@@ -29,6 +30,7 @@ public class UIController : MonoBehaviour
                 OpenUI();
         }
     }
+    */
 
     public void OpenUI()
     {
