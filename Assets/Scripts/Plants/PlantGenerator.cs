@@ -242,27 +242,27 @@ public class PlantGenerator : MonoBehaviour
         };
     }
 
-    private void SetIterations(int value)
+    public void SetIterations(int value)
     {
         iterations = value;
     }
 
-    private void SetRuleConfigFile(TextAsset file)
+    public void SetRuleConfigFile(TextAsset file)
     {
         ruleConfigFile = file;
     }
 
-    private void SetScale(float value)
+    public void SetScale(float value)
     {
         scale = Mathf.Clamp(value, 0.1f, 10f);
     }
 
-    private void SetDelta(float value)
+    public void SetDelta(float value)
     {
         delta = value;
     }
 
-    private void SetFlowerSpawnProbability(float value)
+    public void SetFlowerSpawnProbability(float value)
     {
         flowerSpawnProbability = Mathf.Clamp01(value);
     }

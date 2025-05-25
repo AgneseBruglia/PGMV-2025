@@ -17933,7 +17933,10 @@ MonoBehaviour:
   uiCanvas: {fileID: 1725637069}
   playerView: {fileID: 1546109774}
   playerController: {fileID: 465184651}
-  plant: {fileID: 0}
+  ruleConfigFiles:
+  - {fileID: 4900000, guid: 275da0abb7126ed4cafe7ad1e0f1fcb2, type: 3}
+  - {fileID: 4900000, guid: 3cbb1d9cfb994e14aa73d35aba40a7de, type: 3}
+  - {fileID: 4900000, guid: 8f3a6a2d64659a449ac675466ea6677b, type: 3}
   iterationsInput: {fileID: 629595896}
   ruleDropdown: {fileID: 515663975}
   scaleSlider: {fileID: 1676622740}
@@ -18951,6 +18954,34 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6216896429017393259, guid: f23ee10bee6fcaa44b3a6d4daabde076, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6216896429017393259, guid: f23ee10bee6fcaa44b3a6d4daabde076, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6216896429017393259, guid: f23ee10bee6fcaa44b3a6d4daabde076, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1610981595}
+    - target: {fileID: 6216896429017393259, guid: f23ee10bee6fcaa44b3a6d4daabde076, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6216896429017393259, guid: f23ee10bee6fcaa44b3a6d4daabde076, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: setIterations
+      objectReference: {fileID: 0}
+    - target: {fileID: 6216896429017393259, guid: f23ee10bee6fcaa44b3a6d4daabde076, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: UIController, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6216896429017393259, guid: f23ee10bee6fcaa44b3a6d4daabde076, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 6677539475451845757, guid: f23ee10bee6fcaa44b3a6d4daabde076, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -18966,6 +18997,34 @@ PrefabInstance:
     - target: {fileID: 7089291022996582443, guid: f23ee10bee6fcaa44b3a6d4daabde076, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7442124644124453412, guid: f23ee10bee6fcaa44b3a6d4daabde076, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7442124644124453412, guid: f23ee10bee6fcaa44b3a6d4daabde076, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7442124644124453412, guid: f23ee10bee6fcaa44b3a6d4daabde076, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1610981595}
+    - target: {fileID: 7442124644124453412, guid: f23ee10bee6fcaa44b3a6d4daabde076, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7442124644124453412, guid: f23ee10bee6fcaa44b3a6d4daabde076, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: setRules
+      objectReference: {fileID: 0}
+    - target: {fileID: 7442124644124453412, guid: f23ee10bee6fcaa44b3a6d4daabde076, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: UIController, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 7442124644124453412, guid: f23ee10bee6fcaa44b3a6d4daabde076, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 8912552610152939390, guid: f23ee10bee6fcaa44b3a6d4daabde076, type: 3}
       propertyPath: m_Name
