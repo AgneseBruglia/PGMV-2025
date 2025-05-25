@@ -1,11 +1,19 @@
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class UIController : MonoBehaviour
 {
     public GameObject uiCanvas;
     public PlayerView playerView;
     public PlayerController playerController;
-
+    public GameObject plant;
+    public TMP_InputField iterationsInput;
+    public TMP_Dropdown ruleDropdown;
+    public Slider scaleSlider;
+    public TMP_InputField angleInput;
+    public Slider flowersSlider;
+    
     private bool isUIOpen = false;
 
     void Start()
@@ -32,7 +40,7 @@ public class UIController : MonoBehaviour
     }
     */
 
-    public void OpenUI()
+    public void OpenUI(GameObject plant)
     {
         uiCanvas.SetActive(true);
         Cursor.lockState = CursorLockMode.None;
@@ -45,6 +53,20 @@ public class UIController : MonoBehaviour
 
         if (playerController != null)
             playerController.enabled = false;
+
+        Plant data = plant.GetComponent<PlantGenerator>().GetValues();
+
+        // Setting of the default values
+        iterationsInput.text = data.iterations.ToString();
+        angleInput.text = data.delta.ToString();
+        string ruleName = data.ruleConfigFile != null ? data.ruleConfigFile.name : "";
+        int index = ruleDropdown.options.FindIndex(opt => opt.text == ruleName);
+        if (index >= 0)
+        {
+            ruleDropdown.value = index;
+        }
+        scaleSlider.value = data.scale;
+        flowersSlider.value = data.flowerSpawnProbability;
     }
 
     public void CloseUI()
@@ -61,4 +83,5 @@ public class UIController : MonoBehaviour
         if (playerController != null)
             playerController.enabled = true;
     }
+    
 }

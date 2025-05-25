@@ -229,6 +229,44 @@ public class PlantGenerator : MonoBehaviour
         Destroy(turtle.gameObject);
     }
 
+    // Getter function for the plant values
+    public Plant GetValues()
+    {
+        return new Plant
+        {
+            iterations = this.iterations,
+            ruleConfigFile = this.ruleConfigFile,
+            scale = this.scale,
+            delta = this.delta,
+            flowerSpawnProbability = this.flowerSpawnProbability
+        };
+    }
+
+    private void SetIterations(int value)
+    {
+        iterations = value;
+    }
+
+    private void SetRuleConfigFile(TextAsset file)
+    {
+        ruleConfigFile = file;
+    }
+
+    private void SetScale(float value)
+    {
+        scale = Mathf.Clamp(value, 0.1f, 10f);
+    }
+
+    private void SetDelta(float value)
+    {
+        delta = value;
+    }
+
+    private void SetFlowerSpawnProbability(float value)
+    {
+        flowerSpawnProbability = Mathf.Clamp01(value);
+    }
+
     struct TransformInfo
     {
         public Vector3 position;

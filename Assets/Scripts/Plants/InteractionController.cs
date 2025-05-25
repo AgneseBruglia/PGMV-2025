@@ -7,6 +7,6 @@ public class InteractionController : MonoBehaviour
 
     public void OpenInterface(GameObject plant)
     {
-        plantUIController.GetComponent<UIController>().OpenUI();
+        plantUIController.GetComponent<UIController>().OpenUI(plant);
     }
 }
