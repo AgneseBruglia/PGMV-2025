@@ -345,6 +345,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f743717c481136478999cec88a85a93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0
-  open: 0
-  active: 0
+  door: {fileID: 1031417360584022427}
+  openOffset: {x: 0, y: 0, z: 4.1}
+  speed: 3

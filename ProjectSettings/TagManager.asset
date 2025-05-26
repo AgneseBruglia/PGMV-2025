@@ -19,6 +19,8 @@ TagManager:
   - Plant
   - JETS
   - BOTTOM_JET
+  - CubicleDoor
+  - Drawer
   layers:
   - Default
   - TransparentFX

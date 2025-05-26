@@ -9,6 +9,7 @@ public class Cabinet : MonoBehaviour
     public GameObject prefab_p; // prefab_p
     public GameObject prefab_c; // prefabC
     public GameObject prefab_g; // prefabG
+    public GameObject prefab_l; // light
     public GameObject shell_corner; // Cabinet part 1,3,7,9
     public GameObject shell_middle; // Cabinet part 2, 4, 6, 8
     public GameObject shell_center; // Cabinet part 5
@@ -160,17 +161,51 @@ public class Cabinet : MonoBehaviour
 
         // Assicurati che abbia un BoxCollider
         if (!door_instance_final.TryGetComponent<Collider>(out _))
-            {
-                Debug.LogWarning("Stiamo aggiungendo il collider");
-                BoxCollider boxCollider = door_instance_final.AddComponent<BoxCollider>();
-                boxCollider.size = door_instance_final.transform.localScale;
-            }
+        {
+            Debug.LogWarning("Stiamo aggiungendo il collider");
+            BoxCollider boxCollider = door_instance_final.AddComponent<BoxCollider>();
+            boxCollider.isTrigger = true;
+
+            // Definisci una zona più ampia intorno alla porta
+            float extraWidth = 10f;
+            float extraHeight = 2f;
+            float extraDepth = 10f;
+
+            Vector3 scaledSize = door_instance_final.transform.localScale;
+            boxCollider.size = new Vector3(
+                scaledSize.x + extraWidth,
+                scaledSize.y + extraHeight,
+                scaledSize.z + extraDepth
+            );
+
+            boxCollider.center = Vector3.zero; // oppure regola se vuoi spostarlo in avanti
+            boxCollider.isTrigger = true;
+        }
+
         else{
             Debug.LogWarning("Il collider ci sta");
         }
 
         transform.position = parent_position;
         transform.rotation = parent_rotation;
+
+        // Posiziona una luce sopra il cabinet in base alle dimensioni calcolate
+        if (prefab_l != null)
+        {
+            Vector3 lightPosition = new Vector3(
+                0f,         // X (come il cabinet)
+                m_max + 0.68f,  // Y sopra il punto più alto
+                n_max / 2f  // Z al centro in profondità
+            );
+
+            GameObject light_instance = Instantiate(prefab_l);
+            light_instance.transform.parent = transform;
+            light_instance.transform.localPosition = lightPosition;
+            light_instance.transform.localRotation = Quaternion.identity;
+            light_instance.transform.localScale = new Vector3(1f, 1.5f, n_max + 1);
+
+        }
+
     }
 
     // Update is called once per frame
