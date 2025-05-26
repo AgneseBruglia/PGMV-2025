@@ -267,6 +267,79 @@ public class PlantGenerator : MonoBehaviour
         flowerSpawnProbability = Mathf.Clamp01(value);
     }
 
+    // Generates the new plant after changes in the interface
+    public void RegeneratePlant()
+    {
+        foreach (Transform child in transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        BoxCollider oldCollider = GetComponent<BoxCollider>();
+        if (oldCollider != null)
+            Destroy(oldCollider);
+
+        Rigidbody oldRb = GetComponent<Rigidbody>();
+        if (oldRb != null)
+            Destroy(oldRb);
+
+        LoadRulesFromJSON();
+
+        Vector3 startPosition = transform.position;
+
+        string lSystem = GenerateLSystem(axiom, rules, iterations);
+        Debug.Log("Regenerating L-System: " + lSystem);
+
+        if (potPrefab != null)
+        {
+            GameObject pot = Instantiate(potPrefab, startPosition, Quaternion.identity, transform);
+            pot.transform.localScale *= scale;
+            Renderer rend = pot.GetComponentInChildren<Renderer>();
+            if (rend != null)
+            {
+                float potHeight = rend.bounds.size.y;
+                startPosition += Vector3.up * potHeight;
+            }
+        }
+
+        DrawLSystem(lSystem, startPosition, transform);
+
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        Bounds combinedBounds = new Bounds();
+        bool initialized = false;
+
+        foreach (Renderer rend in renderers)
+        {
+            if (!initialized)
+            {
+                combinedBounds = rend.bounds;
+                initialized = true;
+            }
+            else
+            {
+                combinedBounds.Encapsulate(rend.bounds);
+            }
+        }
+
+        if (initialized)
+        {
+            BoxCollider box = gameObject.AddComponent<BoxCollider>();
+            box.center = transform.InverseTransformPoint(combinedBounds.center);
+            box.size = transform.InverseTransformVector(combinedBounds.size) * 0.9f;
+            box.isTrigger = false;
+
+            Rigidbody rb = gameObject.AddComponent<Rigidbody>();
+            rb.useGravity = true;
+            rb.isKinematic = false;
+
+            gameObject.tag = "Plant";
+        }
+        else
+        {
+            Debug.LogWarning("No renderers found to calculate bounds.");
+        }
+    }
+
     struct TransformInfo
     {
         public Vector3 position;

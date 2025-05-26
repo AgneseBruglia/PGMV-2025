@@ -12,7 +12,7 @@ public class UIController : MonoBehaviour
     public List<TextAsset> ruleConfigFiles;
     public TMP_InputField iterationsInput;
     public TMP_Dropdown ruleDropdown;
-    public Slider scaleSlider;
+    public TMP_InputField scaleInput;
     public TMP_InputField angleInput;
     public Slider flowersSlider;
 
@@ -50,13 +50,13 @@ public class UIController : MonoBehaviour
         // Setting of the default values
         iterationsInput.text = data.iterations.ToString();
         angleInput.text = data.delta.ToString();
+        scaleInput.text = data.scale.ToString();
         string ruleName = data.ruleConfigFile != null ? data.ruleConfigFile.name : "";
         int index = ruleDropdown.options.FindIndex(opt => opt.text == ruleName);
         if (index >= 0)
         {
             ruleDropdown.value = index;
         }
-        scaleSlider.value = data.scale;
         flowersSlider.value = data.flowerSpawnProbability;
     }
 
@@ -101,5 +101,42 @@ public class UIController : MonoBehaviour
             Debug.LogWarning($"No TextAsset found with the name {selectedRuleName}");
         }
     }
-  
+
+    public void setScale()
+    {
+        float scaleValue;
+        if (float.TryParse(scaleInput.text, out scaleValue))
+        {
+            hit_plant.GetComponent<PlantGenerator>().SetScale(scaleValue);
+        }
+        else
+        {
+            Debug.LogWarning("Invalid Scale input");
+        }
+    }
+
+    public void setAngle()
+    {
+        float parsedAngle;
+        if (float.TryParse(angleInput.text, out parsedAngle))
+        {
+            hit_plant.GetComponent<PlantGenerator>().SetDelta(parsedAngle);
+        }
+        else
+        {
+            Debug.LogWarning("Invalid Angle input");
+        }
+    }
+
+    public void setFlowerProbability()
+    {
+        float probability = flowersSlider.value;
+        hit_plant.GetComponent<PlantGenerator>().SetFlowerSpawnProbability(probability);
+    }
+
+    public void ApplyChanges()
+    {
+        hit_plant.GetComponent<PlantGenerator>().RegeneratePlant();
+    }
+
 }
