@@ -8,6 +8,7 @@ public class UIController : MonoBehaviour
     public GameObject uiCanvas;
     public PlayerView playerView;
     public PlayerController playerController;
+    public PlantSimulationController plantController;
     private GameObject hit_plant;
     public List<TextAsset> ruleConfigFiles;
     public TMP_InputField iterationsInput;
@@ -15,8 +16,12 @@ public class UIController : MonoBehaviour
     public TMP_InputField scaleInput;
     public TMP_InputField angleInput;
     public Slider flowersSlider;
+    public Button toggleWindButton;
+    public TextMeshProUGUI textOn;
+    public TextMeshProUGUI textOff;
 
     private bool isUIOpen = false;
+    private bool isOn = true;
 
     void Start()
     {
@@ -27,6 +32,20 @@ public class UIController : MonoBehaviour
                 playerView = mainCam.GetComponent<PlayerView>();
         }
         CloseUI();
+        toggleWindButton.onClick.AddListener(ToggleText);
+        UpdateText();
+    }
+
+     void ToggleText()
+    {
+        isOn = !isOn;
+        UpdateText();
+    }
+
+    void UpdateText()
+    {
+        textOn.gameObject.SetActive(isOn);
+        textOff.gameObject.SetActive(!isOn);
     }
 
     public void OpenUI(GameObject plant)
@@ -137,6 +156,36 @@ public class UIController : MonoBehaviour
     public void ApplyChanges()
     {
         hit_plant.GetComponent<PlantGenerator>().RegeneratePlant();
+    }
+
+    public void ToggleWindEffect()
+    {
+        plantController.GetComponent<PlantSimulationController>().ToggleWind();
+    }
+
+    public void PlayGeneration()
+    {
+        plantController.GetComponent<PlantSimulationController>().PlaySimulation();
+    }
+
+    public void PauseGeneration()
+    {
+        plantController.GetComponent<PlantSimulationController>().PauseSimulation();
+    }
+
+    public void RestartGeneration()
+    {
+        plantController.GetComponent<PlantSimulationController>().RestartSimulation();
+    }
+
+    public void SinglePlantGrowth()
+    {
+
+    }
+
+    public void MultiplePlantsGrowth()
+    {
+        
     }
 
 }

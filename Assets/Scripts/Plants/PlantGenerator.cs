@@ -270,59 +270,61 @@ public class PlantGenerator : MonoBehaviour
     // Generates the new plant after changes in the interface
     public void RegeneratePlant()
     {
-        foreach (Transform child in transform)
+        if (iterations > 0)
         {
-            Destroy(child.gameObject);
+            foreach (Transform child in transform)
+                Destroy(child.gameObject);
+
+            Destroy(GetComponent<BoxCollider>());
+            Destroy(GetComponent<Rigidbody>());
+
+            LoadRulesFromJSON();
         }
-
-        BoxCollider oldCollider = GetComponent<BoxCollider>();
-        if (oldCollider != null)
-            Destroy(oldCollider);
-
-        Rigidbody oldRb = GetComponent<Rigidbody>();
-        if (oldRb != null)
-            Destroy(oldRb);
-
-        LoadRulesFromJSON();
 
         Vector3 startPosition = transform.position;
 
-        string lSystem = GenerateLSystem(axiom, rules, iterations);
-        Debug.Log("Regenerating L-System: " + lSystem);
-
-        if (potPrefab != null)
+        // Generates only the pot
+        if (iterations == 0)
         {
-            GameObject pot = Instantiate(potPrefab, startPosition, Quaternion.identity, transform);
-            pot.transform.localScale *= scale;
-            Renderer rend = pot.GetComponentInChildren<Renderer>();
-            if (rend != null)
+            if (potPrefab != null)
             {
-                float potHeight = rend.bounds.size.y;
-                startPosition += Vector3.up * potHeight;
-            }
-        }
+                GameObject pot = Instantiate(potPrefab, startPosition, Quaternion.identity, transform);
+                pot.transform.localScale *= scale;
 
+                Renderer rend = pot.GetComponentInChildren<Renderer>();
+                if (rend != null)
+                {
+                    float potHeight = rend.bounds.size.y;
+                    startPosition += Vector3.up * potHeight;
+                }
+
+                BoxCollider box = gameObject.AddComponent<BoxCollider>();
+
+                box.center = transform.InverseTransformPoint(pot.transform.position);
+                box.size = rend.bounds.size;
+
+                box.isTrigger = false;
+
+                Rigidbody rb = gameObject.AddComponent<Rigidbody>();
+                rb.useGravity = true;
+                rb.isKinematic = false;
+
+                gameObject.tag = "Plant";
+            }
+
+            return;
+        }
+        
+        string lSystem = GenerateLSystem(axiom, rules, iterations);
         DrawLSystem(lSystem, startPosition, transform);
 
         Renderer[] renderers = GetComponentsInChildren<Renderer>();
-        Bounds combinedBounds = new Bounds();
-        bool initialized = false;
-
-        foreach (Renderer rend in renderers)
+        if (renderers.Length > 0)
         {
-            if (!initialized)
-            {
-                combinedBounds = rend.bounds;
-                initialized = true;
-            }
-            else
-            {
-                combinedBounds.Encapsulate(rend.bounds);
-            }
-        }
+            Bounds combinedBounds = renderers[0].bounds;
+            for (int i = 1; i < renderers.Length; i++)
+                combinedBounds.Encapsulate(renderers[i].bounds);
 
-        if (initialized)
-        {
             BoxCollider box = gameObject.AddComponent<BoxCollider>();
             box.center = transform.InverseTransformPoint(combinedBounds.center);
             box.size = transform.InverseTransformVector(combinedBounds.size) * 0.9f;
@@ -338,6 +340,30 @@ public class PlantGenerator : MonoBehaviour
         {
             Debug.LogWarning("No renderers found to calculate bounds.");
         }
+    }
+
+    public void ResetPlant()
+    {
+        foreach (Transform child in transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        BoxCollider oldCollider = GetComponent<BoxCollider>();
+        if (oldCollider != null)
+            Destroy(oldCollider);
+
+        Rigidbody oldRb = GetComponent<Rigidbody>();
+        if (oldRb != null)
+            Destroy(oldRb);
+
+        gameObject.tag = "Untagged";
+    }
+
+    public void SimulateStep(int iteration)
+    {
+        SetIterations(iteration);
+        RegeneratePlant();
     }
 
     struct TransformInfo
