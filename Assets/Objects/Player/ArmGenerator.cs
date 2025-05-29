@@ -1,4 +1,8 @@
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+
+
 
 public class ArmGenerator : MonoBehaviour
 {
@@ -15,8 +19,29 @@ public class ArmGenerator : MonoBehaviour
     private GameObject elbow_right;
     private GameObject hand_right;
 
-    public float speed = 5;
-    //private float time = 0;
+    public float duration = 1f;
+
+    public enum ArmSide { Left, Right }
+    public enum ArmAction { Raise, Lower }
+
+
+    private Dictionary<(ArmSide, ArmAction), bool> isMoving = new();
+
+
+    public class TargetPosition
+    {
+        public Quaternion targetShoulderRot;
+        public Quaternion targetUpperArmRot;
+        public Quaternion targetLowerArmRot;
+
+        public TargetPosition(Quaternion targetShoulderRot, Quaternion targetUpperArmRot, Quaternion targetLowerArmRot)
+        {
+            this.targetShoulderRot = targetShoulderRot;
+            this.targetUpperArmRot = targetUpperArmRot;
+            this.targetLowerArmRot = targetLowerArmRot;
+        }
+    }
+
 
     void Awake()
     {
@@ -26,33 +51,107 @@ public class ArmGenerator : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        isMoving[(ArmSide.Left, ArmAction.Raise)] = false;
+        isMoving[(ArmSide.Left, ArmAction.Lower)] = false;
+        isMoving[(ArmSide.Right, ArmAction.Raise)] = false;
+        isMoving[(ArmSide.Right, ArmAction.Lower)] = false;
     }
+
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E) && (!isMoving[(ArmSide.Left, ArmAction.Lower)] || !isMoving[(ArmSide.Right, ArmAction.Lower)])) // to main pose
         {
-            main_pose();
-            arm_right.GetComponent<AudioSource>().Play();
-            arm_left.GetComponent<AudioSource>().Play();
+            StartCoroutine(
+                moveArm(
+                    arm_left,
+                    ArmSide.Left,
+                    ArmAction.Lower,
+                    new TargetPosition(
+                        Quaternion.Euler(320, 0, 0),
+                        Quaternion.Euler(320, 0, 0),
+                        Quaternion.Euler(0, 180, 0)
+                    )
+                )
+            );
+
+            StartCoroutine(
+                moveArm(
+                    arm_right,
+                    ArmSide.Right,
+                    ArmAction.Lower,
+                    new TargetPosition(
+                        Quaternion.Euler(320, 0, 0),
+                        Quaternion.Euler(320, 0, 0),
+                        Quaternion.Euler(0, 180, 0)
+                    )
+                )
+            );
         }
-        if (Input.GetKeyDown(KeyCode.I))
+
+        if (Input.GetKeyDown(KeyCode.I) && !isMoving[(ArmSide.Left, ArmAction.Raise)])
         {
-            raise_left_arm();
+            StartCoroutine(
+                moveArm(
+                    arm_left,
+                    ArmSide.Left,
+                    ArmAction.Raise,
+                    new TargetPosition(
+                        Quaternion.Euler(-90, 0, 0),
+                        Quaternion.Euler(-40, -15, 0),
+                        Quaternion.Euler(0, 200, 0)
+                    )
+                )
+            );
         }
-        if (Input.GetKeyDown(KeyCode.K))
+
+        if (Input.GetKeyDown(KeyCode.K) && !isMoving[(ArmSide.Left, ArmAction.Lower)])
         {
-            lower_left_arm();
+            StartCoroutine(
+                moveArm(
+                    arm_left,
+                    ArmSide.Left,
+                    ArmAction.Lower,
+                    new TargetPosition(
+                        Quaternion.Euler(320, 0, 0),
+                        Quaternion.Euler(320, 0, 0),
+                        Quaternion.Euler(0, 180, 0)
+                    )
+                )
+            );
         }
-        if (Input.GetKeyDown(KeyCode.O))
+
+        if (Input.GetKeyDown(KeyCode.O) && !isMoving[(ArmSide.Right, ArmAction.Raise)])
         {
-            raise_right_arm();
+            StartCoroutine(
+                moveArm(
+                    arm_right,
+                    ArmSide.Right,
+                    ArmAction.Raise,
+                    new TargetPosition(
+                        Quaternion.Euler(-90, 0, 0),
+                        Quaternion.Euler(-40, -15, 0),
+                        Quaternion.Euler(0, 200, 0)
+                    )
+                )
+            );
         }
-        if (Input.GetKeyDown(KeyCode.L))
+
+        if (Input.GetKeyDown(KeyCode.L) && !isMoving[(ArmSide.Right, ArmAction.Lower)])
         {
-            lower_right_arm();
+            StartCoroutine(
+                moveArm(
+                    arm_right,
+                    ArmSide.Right,
+                    ArmAction.Lower,
+                    new TargetPosition(
+                        Quaternion.Euler(320, 0, 0),
+                        Quaternion.Euler(320, 0, 0),
+                        Quaternion.Euler(0, 180, 0)
+                    )
+                )
+            );
         }
     }
 
@@ -96,69 +195,112 @@ public class ArmGenerator : MonoBehaviour
         main_pose();
     }
 
-
-    void raise_left_arm() // on key E  is pressed
+    IEnumerator moveArm(GameObject arm, ArmSide side, ArmAction action, TargetPosition target)
     {
-        //shoulder left
-        arm_left.transform.GetChild(0).transform.localRotation = Quaternion.Euler(-90, 0, 0);
-        arm_left.transform.GetChild(0).transform.GetChild(1).transform.localRotation = Quaternion.Euler(-40, -15, 0);
-        arm_left.transform.GetChild(0).transform.GetChild(1).transform.GetChild(1).transform.localRotation = Quaternion.Euler(0, 200, 0);
+        isMoving[(side, action)] = true;
 
-        arm_left.GetComponent<AudioSource>().Play();
-    }
-    void lower_left_arm() // on key E  is pressed
-    {
-        //shoulder left
-        arm_left.transform.GetChild(0).transform.localRotation = Quaternion.Euler(320, 0, 0);
-        arm_left.transform.GetChild(0).transform.GetChild(1).transform.localRotation = Quaternion.Euler(320, 0, 0);
-        arm_left.transform.GetChild(0).transform.GetChild(1).transform.GetChild(1).transform.localRotation = Quaternion.Euler(0, 180, 0);
-        arm_left.GetComponent<AudioSource>().Play();
-    }
+        AudioSource audio = arm.GetComponent<AudioSource>();
+        audio.loop = true;
+        audio.Play();
 
+        Transform shoulder = arm.transform.GetChild(0);
+        Transform upperArm = shoulder.GetChild(1);
+        Transform lowerArm = upperArm.GetChild(1);
 
-    void raise_right_arm() // on key E  is pressed
-    {
-        //shoulder left
-        arm_right.transform.GetChild(0).transform.localRotation = Quaternion.Euler(-90, 0, 0);
-        arm_right.transform.GetChild(0).transform.GetChild(1).transform.localRotation = Quaternion.Euler(-40, 15, 0);
-        arm_right.transform.GetChild(0).transform.GetChild(1).transform.GetChild(1).transform.localRotation = Quaternion.Euler(0, -200, 0);
-        arm_right.GetComponent<AudioSource>().Play();
-    }
-    void lower_right_arm() // on key E  is pressed
-    {
-        //shoulder left
-        arm_right.transform.GetChild(0).transform.localRotation = Quaternion.Euler(320, 0, 0);
-        arm_right.transform.GetChild(0).transform.GetChild(1).transform.localRotation = Quaternion.Euler(320, 0, 0);
-        arm_right.transform.GetChild(0).transform.GetChild(1).transform.GetChild(1).transform.localRotation = Quaternion.Euler(0, 180, 0);
-        arm_right.GetComponent<AudioSource>().Play();
+        // if already in position, do nothing
+        if (
+            shoulder.transform.localRotation == target.targetShoulderRot
+            && upperArm.transform.localRotation == target.targetUpperArmRot
+            && lowerArm.transform.localRotation == target.targetLowerArmRot
+        )
+        {
+            audio.loop = false;
+            audio.GetComponent<AudioSource>().Stop();
+            isMoving[(side, action)] = false;
+            yield break;
+        }
+
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            float t = elapsed / duration;
+
+            shoulder.localRotation = Quaternion.Slerp(shoulder.transform.localRotation, target.targetShoulderRot, t);
+            upperArm.localRotation = Quaternion.Slerp(upperArm.transform.localRotation, target.targetUpperArmRot, t);
+            lowerArm.localRotation = Quaternion.Slerp(lowerArm.transform.localRotation, target.targetLowerArmRot, t);
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        // Ensure final rotation is exact
+        shoulder.localRotation = target.targetShoulderRot;
+        upperArm.localRotation = target.targetUpperArmRot;
+        lowerArm.localRotation = target.targetLowerArmRot;
+
+        audio.loop = false;
+        audio.GetComponent<AudioSource>().Stop();
+
+        isMoving[(side, action)] = false;
     }
 
     public void main_pose()
     {
-        //shoulder left
-        arm_left.transform.GetChild(0).transform.localRotation = Quaternion.Euler(320, 0, 0);
-        arm_left.transform.GetChild(0).transform.GetChild(1).transform.localRotation = Quaternion.Euler(320, 0, 0);
-        arm_left.transform.GetChild(0).transform.GetChild(1).transform.GetChild(1).transform.localRotation = Quaternion.Euler(0, 180, 0);
+        StartCoroutine(
+            moveArm(
+                arm_left,
+                ArmSide.Left,
+                ArmAction.Lower,
+                new TargetPosition(
+                    Quaternion.Euler(320, 0, 0),
+                    Quaternion.Euler(320, 0, 0),
+                    Quaternion.Euler(0, 180, 0)
+                )
+            )
+        );
 
-        //shoulder left
-        arm_right.transform.GetChild(0).transform.localRotation = Quaternion.Euler(320, 0, 0);
-        arm_right.transform.GetChild(0).transform.GetChild(1).transform.localRotation = Quaternion.Euler(320, 0, 0);
-        arm_right.transform.GetChild(0).transform.GetChild(1).transform.GetChild(1).transform.localRotation = Quaternion.Euler(0, 180, 0);
+        StartCoroutine(
+            moveArm(
+                arm_right,
+                ArmSide.Right,
+                ArmAction.Lower,
+                new TargetPosition(
+                    Quaternion.Euler(320, 0, 0),
+                    Quaternion.Euler(320, 0, 0),
+                    Quaternion.Euler(0, 180, 0)
+                )
+            )
+        );
     }
 
     public void grab_pose()
     {
-        //shoulder left
-        arm_left.transform.GetChild(0).transform.localRotation = Quaternion.Euler(-90, 0, 0);
-        arm_left.transform.GetChild(0).transform.GetChild(1).transform.localRotation = Quaternion.Euler(-40, -15, 0);
-        arm_left.transform.GetChild(0).transform.GetChild(1).transform.GetChild(1).transform.localRotation = Quaternion.Euler(0, 200, 0);
+        StartCoroutine(
+            moveArm(
+                arm_left,
+                ArmSide.Left,
+                ArmAction.Raise,
+                new TargetPosition(
+                    Quaternion.Euler(-90, 0, 0),
+                    Quaternion.Euler(-40, 15, 0),
+                    Quaternion.Euler(0, 200, 0)
+                )
+            )
+        );
 
-        //shoulder right
-        arm_right.transform.GetChild(0).transform.localRotation = Quaternion.Euler(-90, 0, 0);
-        arm_right.transform.GetChild(0).transform.GetChild(1).transform.localRotation = Quaternion.Euler(-40, 15, 0);
-        arm_right.transform.GetChild(0).transform.GetChild(1).transform.GetChild(1).transform.localRotation = Quaternion.Euler(0, -200, 0);
-        arm_right.GetComponent<AudioSource>().Play();
-        arm_left.GetComponent<AudioSource>().Play();
+        StartCoroutine(
+            moveArm(
+                arm_right,
+                ArmSide.Right,
+                ArmAction.Raise,
+                new TargetPosition(
+                    Quaternion.Euler(-90, 0, 0),
+                    Quaternion.Euler(-40, 15, 0),
+                    Quaternion.Euler(0, -200, 0)
+                )
+            )
+        );
     }
 
 
