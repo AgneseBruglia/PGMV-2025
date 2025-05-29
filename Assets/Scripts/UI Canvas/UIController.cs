@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections;
 using System.Collections.Generic;
 
 public class UIController : MonoBehaviour
@@ -155,7 +156,19 @@ public class UIController : MonoBehaviour
 
     public void ApplyChanges()
     {
-        hit_plant.GetComponent<PlantGenerator>().RegeneratePlant();
+        if (hit_plant == null) return;
+
+        var plantGenerator = hit_plant.GetComponent<PlantGenerator>();
+        if (plantGenerator == null) return;
+
+        StartCoroutine(ApplyChangesRoutine(plantGenerator));
+    }
+
+    private IEnumerator ApplyChangesRoutine(PlantGenerator plantGenerator)
+    {
+        yield return StartCoroutine(plantGenerator.ResetPlant());
+        plantGenerator.RegeneratePlant();
+        hit_plant = plantGenerator.gameObject;
     }
 
     public void ToggleWindEffect()
@@ -165,17 +178,20 @@ public class UIController : MonoBehaviour
 
     public void PlayGeneration()
     {
+        Debug.Log("Play clicked");
         plantController.GetComponent<PlantSimulationController>().PlaySimulation();
     }
 
     public void PauseGeneration()
     {
+        Debug.Log("Pause clicked");
         plantController.GetComponent<PlantSimulationController>().PauseSimulation();
     }
 
     public void RestartGeneration()
     {
-        plantController.GetComponent<PlantSimulationController>().RestartSimulation();
+        Debug.Log("Restart clicked");
+        StartCoroutine(plantController.GetComponent<PlantSimulationController>().RestartSimulation());
     }
 
     public void SinglePlantGrowth()

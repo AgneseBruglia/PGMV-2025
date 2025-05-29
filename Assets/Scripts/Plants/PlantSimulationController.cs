@@ -20,27 +20,20 @@ public class PlantSimulationController : MonoBehaviour
     {
         if (simulationCoroutine == null)
         {
+            isPaused = false;
             simulationCoroutine = StartCoroutine(RunSimulation());
         }
         else if (isPaused)
         {
-            isPaused = false;
+            isPaused = false; // semplicemente sblocca la pausa senza ricominciare la coroutine
         }
     }
 
     public void PauseSimulation()
     {
         isPaused = true;
-    }
-
-    public void RestartSimulation()
-    {
-        StopSimulation();
-        foreach (var plant in plantGenerators)
-        {
-            plant.ResetPlant();
-        }
-        PlaySimulation();
+        // Non stoppare la coroutine per permettere il resume
+        // StopSimulation();
     }
 
     public void StopSimulation()
@@ -49,35 +42,52 @@ public class PlantSimulationController : MonoBehaviour
         {
             StopCoroutine(simulationCoroutine);
             simulationCoroutine = null;
+            isPaused = false;
         }
+    }
+
+    public IEnumerator RestartSimulation()
+    {
+        StopSimulation();
+
+        foreach (var plant in plantGenerators)
+        {
+            yield return StartCoroutine(plant.ResetPlant());
+        }
+
+        plantGenerators = FindObjectsOfType<PlantGenerator>();
+        Debug.Log($"PlantGenerators count after restart: {plantGenerators.Length}");
+        
+        PlaySimulation();
     }
 
     private IEnumerator RunSimulation()
     {
-        int totalIterations = 0;
-
         foreach (var plant in plantGenerators)
         {
-            if (plant.iterations > totalIterations)
-                totalIterations = plant.iterations;
+            StartCoroutine(SimulatePlantGrowth(plant));
         }
 
-        for (int i = 0; i <= totalIterations; i++)
-        {
-            if (!isPaused)
-            {
-                foreach (var plant in plantGenerators)
-                {
-                    plant.SimulateStep(i);
-                }
-            }
-
-            yield return new WaitForSeconds(growthInterval);
-        }
+        yield return null;
 
         simulationCoroutine = null;
     }
-    
+
+    private IEnumerator SimulatePlantGrowth(PlantGenerator plant)
+    {
+        int maxIterations = plant.iterations;
+        for (int i = 0; i <= maxIterations; i++)
+        {
+            while (isPaused)
+            {
+                yield return null;
+            }
+
+            plant.SimulateStep(i);
+            yield return new WaitForSeconds(growthInterval);
+        }
+    }
+
     public void ToggleWind()
     {
         windActive = !windActive;

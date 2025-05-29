@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 
 public class PlantGenerator : MonoBehaviour
@@ -21,8 +22,7 @@ public class PlantGenerator : MonoBehaviour
     [Range(0f, 1f)]
     public float flowerSpawnProbability = 0.25f;
 
-    [Header("Plant UI Controller")]
-    public UIController plantUIController;
+    private Vector3 startPositionPlant = Vector3.zero;
 
     private Dictionary<string, LSystemRule> rules = new Dictionary<string, LSystemRule>();
 
@@ -34,17 +34,7 @@ public class PlantGenerator : MonoBehaviour
         string lSystem = GenerateLSystem(axiom, rules, iterations);
         Debug.Log("Final L-System: " + lSystem);
 
-        if (potPrefab != null)
-        {
-            GameObject pot = Instantiate(potPrefab, startPosition, Quaternion.identity, gameObject.transform);
-            pot.transform.localScale *= scale;
-            Renderer rend = pot.GetComponentInChildren<Renderer>();
-            if (rend != null)
-            {
-                float potHeight = rend.bounds.size.y;
-                startPosition += Vector3.up * potHeight;
-            }
-        }        
+        GeneratePot(ref startPosition);        
 
         // Draws the plant
         DrawLSystem(lSystem, startPosition, gameObject.transform);
@@ -114,7 +104,7 @@ public class PlantGenerator : MonoBehaviour
             };
         }
 
-        if (string.IsNullOrEmpty(axiom) && ruleSets.Length > 0)
+        if (ruleSets.Length > 0)
         {
             axiom = ruleSets[0].predecessor;
         }
@@ -229,6 +219,22 @@ public class PlantGenerator : MonoBehaviour
         Destroy(turtle.gameObject);
     }
 
+    void GeneratePot(ref Vector3 position)
+    {
+        if (potPrefab != null)
+        {
+            GameObject pot = Instantiate(potPrefab, position, Quaternion.identity, gameObject.transform);
+            pot.transform.localScale *= scale;
+
+            Renderer rend = pot.GetComponentInChildren<Renderer>();
+            if (rend != null)
+            {
+                float potHeight = rend.bounds.size.y;
+                position += Vector3.up * potHeight;
+            }
+        }
+    }
+
     // Getter function for the plant values
     public Plant GetValues()
     {
@@ -270,53 +276,50 @@ public class PlantGenerator : MonoBehaviour
     // Generates the new plant after changes in the interface
     public void RegeneratePlant()
     {
-        if (iterations > 0)
-        {
-            foreach (Transform child in transform)
-                Destroy(child.gameObject);
+        // Rimuovi i componenti fisici se esistono
+        BoxCollider oldCollider = GetComponent<BoxCollider>();
+        if (oldCollider != null)
+            Destroy(oldCollider);
 
-            Destroy(GetComponent<BoxCollider>());
-            Destroy(GetComponent<Rigidbody>());
+        Rigidbody oldRb = GetComponent<Rigidbody>();
+        if (oldRb != null)
+            Destroy(oldRb);
 
-            LoadRulesFromJSON();
-        }
+        // Rimuovi i figli (pianta vecchia)
+        foreach (Transform child in transform)
+            Destroy(child.gameObject);
+
+        // Ricarica le regole
+        LoadRulesFromJSON();
 
         Vector3 startPosition = transform.position;
 
-        // Generates only the pot
-        if (iterations == 0)
+        // Genera il vaso e aggiorna posizione iniziale
+        GeneratePot(ref startPosition);
+
+        // Crea L-system e disegna la pianta
+        if (iterations > 0)
         {
-            if (potPrefab != null)
+            if (string.IsNullOrEmpty(axiom))
             {
-                GameObject pot = Instantiate(potPrefab, startPosition, Quaternion.identity, transform);
-                pot.transform.localScale *= scale;
-
-                Renderer rend = pot.GetComponentInChildren<Renderer>();
-                if (rend != null)
-                {
-                    float potHeight = rend.bounds.size.y;
-                    startPosition += Vector3.up * potHeight;
-                }
-
-                BoxCollider box = gameObject.AddComponent<BoxCollider>();
-
-                box.center = transform.InverseTransformPoint(pot.transform.position);
-                box.size = rend.bounds.size;
-
-                box.isTrigger = false;
-
-                Rigidbody rb = gameObject.AddComponent<Rigidbody>();
-                rb.useGravity = true;
-                rb.isKinematic = false;
-
-                gameObject.tag = "Plant";
+                Debug.LogError("Axiom is null or empty! Cannot regenerate plant.");
+                return;
             }
 
-            return;
+            string lSystem = GenerateLSystem(axiom, rules, iterations);
+            DrawLSystem(lSystem, startPosition, transform);
+
+            Debug.Log("Plant regenerated!");
         }
-        
-        string lSystem = GenerateLSystem(axiom, rules, iterations);
-        DrawLSystem(lSystem, startPosition, transform);
+
+        // Aspetta un frame e poi aggiungi Rigidbody e BoxCollider
+        StartCoroutine(ReattachPhysicsAfterFrame());
+    }
+
+    private IEnumerator ReattachPhysicsAfterFrame()
+    {
+        // Aspetta un frame per assicurarsi che Destroy() sia completato
+        yield return null;
 
         Renderer[] renderers = GetComponentsInChildren<Renderer>();
         if (renderers.Length > 0)
@@ -325,14 +328,20 @@ public class PlantGenerator : MonoBehaviour
             for (int i = 1; i < renderers.Length; i++)
                 combinedBounds.Encapsulate(renderers[i].bounds);
 
-            BoxCollider box = gameObject.AddComponent<BoxCollider>();
-            box.center = transform.InverseTransformPoint(combinedBounds.center);
-            box.size = transform.InverseTransformVector(combinedBounds.size) * 0.9f;
-            box.isTrigger = false;
+            if (GetComponent<BoxCollider>() == null)
+            {
+                BoxCollider box = gameObject.AddComponent<BoxCollider>();
+                box.center = transform.InverseTransformPoint(combinedBounds.center);
+                box.size = transform.InverseTransformVector(combinedBounds.size) * 0.9f;
+                box.isTrigger = false;
+            }
 
-            Rigidbody rb = gameObject.AddComponent<Rigidbody>();
-            rb.useGravity = true;
-            rb.isKinematic = false;
+            if (GetComponent<Rigidbody>() == null)
+            {
+                Rigidbody rb = gameObject.AddComponent<Rigidbody>();
+                rb.useGravity = true;
+                rb.isKinematic = false;
+            }
 
             gameObject.tag = "Plant";
         }
@@ -342,11 +351,11 @@ public class PlantGenerator : MonoBehaviour
         }
     }
 
-    public void ResetPlant()
+    public IEnumerator ResetPlant()
     {
-        foreach (Transform child in transform)
+        for (int i = transform.childCount - 1; i >= 0; i--)
         {
-            Destroy(child.gameObject);
+            Destroy(transform.GetChild(i).gameObject);
         }
 
         BoxCollider oldCollider = GetComponent<BoxCollider>();
@@ -358,10 +367,13 @@ public class PlantGenerator : MonoBehaviour
             Destroy(oldRb);
 
         gameObject.tag = "Untagged";
+
+        yield return null;
     }
 
     public void SimulateStep(int iteration)
     {
+        Debug.Log($"SimulateStep chiamato con iteration: {iteration}");
         SetIterations(iteration);
         RegeneratePlant();
     }

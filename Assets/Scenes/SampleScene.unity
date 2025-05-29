@@ -326,6 +326,10 @@ PrefabInstance:
       propertyPath: m_UiScaleMode
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 550385185562149203, guid: 49d0240c7e0c8244582f1aa3f186604b, type: 3}
+      propertyPath: m_MatchWidthOrHeight
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 4605320924957979533, guid: 49d0240c7e0c8244582f1aa3f186604b, type: 3}
       propertyPath: m_SizeDelta.x
       value: 918.5732
@@ -336,11 +340,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4605320924957979533, guid: 49d0240c7e0c8244582f1aa3f186604b, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 68
+      value: 34
       objectReference: {fileID: 0}
     - target: {fileID: 4605320924957979533, guid: 49d0240c7e0c8244582f1aa3f186604b, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -216
+      value: -253
       objectReference: {fileID: 0}
     - target: {fileID: 7772481976168678373, guid: 49d0240c7e0c8244582f1aa3f186604b, type: 3}
       propertyPath: m_Pivot.x
@@ -20165,6 +20169,10 @@ PrefabInstance:
       value: 147.5
       objectReference: {fileID: 0}
     - target: {fileID: 1218016590136290331, guid: f23ee10bee6fcaa44b3a6d4daabde076, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -196.00003
+      objectReference: {fileID: 0}
+    - target: {fileID: 1218016590136290331, guid: f23ee10bee6fcaa44b3a6d4daabde076, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -1.8045654
       objectReference: {fileID: 0}
@@ -20259,6 +20267,10 @@ PrefabInstance:
     - target: {fileID: 4180302229116464771, guid: f23ee10bee6fcaa44b3a6d4daabde076, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: ToggleWindEffect
+      objectReference: {fileID: 0}
+    - target: {fileID: 4207043453191689136, guid: f23ee10bee6fcaa44b3a6d4daabde076, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -1.8045654
       objectReference: {fileID: 0}
     - target: {fileID: 4243038465855928573, guid: f23ee10bee6fcaa44b3a6d4daabde076, type: 3}
       propertyPath: m_AnchorMax.y
@@ -23581,8 +23593,8 @@ SceneRoots:
   - {fileID: 1495622190}
   - {fileID: 1294621910}
   - {fileID: 490083675}
-  - {fileID: 1610981596}
   - {fileID: 1858762604}
   - {fileID: 1725637068}
   - {fileID: 42776004}
   - {fileID: 1482498750}
+  - {fileID: 1610981596}
