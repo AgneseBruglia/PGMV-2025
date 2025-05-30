@@ -25,6 +25,12 @@ public class Cabinet : MonoBehaviour
      */
     private void Awake()
     {
+        Debug.Log("Scale:" + transform.lossyScale);
+
+
+        //close_pos = new Vector3(door.position.x, door.position.y, door.position.z);
+        //open_pos = new Vector3(door.position.x, door.position.y, door.position.z + 0.9f);
+
         XmlDocument xml_doc = new XmlDocument();
         xml_doc.LoadXml(xml_asset.text);
 
@@ -33,11 +39,7 @@ public class Cabinet : MonoBehaviour
         Vector3 parent_position = transform.position;
         Quaternion parent_rotation = transform.rotation;
 
-        // Prepara contenitore della porta
-        door = new GameObject("Door");
-        door.transform.parent = transform;
-        door.transform.localPosition = Vector3.zero;
-
+        
         transform.position = new Vector3(0, 0, 0);
         transform.rotation = Quaternion.Euler(0f, 0f, 0f);
 
@@ -150,9 +152,13 @@ public class Cabinet : MonoBehaviour
             n++;
         }
 
+        // Prepara contenitore della porta
+        //door = new GameObject("Door");
+        //door.transform.parent = transform;
+        //door.transform.localPosition = Vector3.zero;
 
         // Instanzia la porta DOPO aver calcolato m_max e n_max
-        GameObject door_instance_final = Instantiate(prefab_door_part, door.transform);
+        GameObject door_instance_final = Instantiate(prefab_door_part, transform);
         float centerY = m_max / 2f;
         float centerZ = n_max / 2f;
         door_instance_final.transform.localPosition = new Vector3(0f, centerY, centerZ);
@@ -203,9 +209,7 @@ public class Cabinet : MonoBehaviour
             light_instance.transform.localPosition = lightPosition;
             light_instance.transform.localRotation = Quaternion.identity;
             light_instance.transform.localScale = new Vector3(1f, 1.5f, n_max + 1);
-
         }
-
     }
 
     // Update is called once per frame
