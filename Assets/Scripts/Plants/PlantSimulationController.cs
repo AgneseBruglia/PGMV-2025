@@ -57,7 +57,7 @@ public class PlantSimulationController : MonoBehaviour
 
         plantGenerators = FindObjectsOfType<PlantGenerator>();
         Debug.Log($"PlantGenerators count after restart: {plantGenerators.Length}");
-        
+
         PlaySimulation();
     }
 
@@ -96,6 +96,17 @@ public class PlantSimulationController : MonoBehaviour
         foreach (var wind in windComponents)
         {
             wind.enabled = windActive;
+        }
+    }
+
+    public IEnumerator MultiplePlantsGrowthRoutine(int iterations)
+    {
+        PlantGenerator[] plantsToGrow = FindObjectsOfType<PlantGenerator>();
+        foreach (var plant in plantsToGrow)
+        {
+            plant.SetIterations(iterations);
+            plant.RegeneratePlant();
+            yield return null;
         }
     }
 }

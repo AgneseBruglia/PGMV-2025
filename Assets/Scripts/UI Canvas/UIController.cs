@@ -15,13 +15,15 @@ public class UIController : MonoBehaviour
     public TMP_InputField iterationsInput;
     public TMP_Dropdown ruleDropdown;
     public TMP_InputField scaleInput;
+    public TMP_InputField branchLenghtInput;
     public TMP_InputField angleInput;
     public Slider flowersSlider;
+    public Slider singlePlantSlider;
+    public Slider multiplePlantSlider;
     public Button toggleWindButton;
     public TextMeshProUGUI textOn;
     public TextMeshProUGUI textOff;
 
-    private bool isUIOpen = false;
     private bool isOn = true;
 
     void Start()
@@ -54,7 +56,6 @@ public class UIController : MonoBehaviour
         uiCanvas.SetActive(true);
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-        isUIOpen = true;
 
         // Disables the player movement and interactions
         if (playerView != null)
@@ -71,6 +72,7 @@ public class UIController : MonoBehaviour
         iterationsInput.text = data.iterations.ToString();
         angleInput.text = data.delta.ToString();
         scaleInput.text = data.scale.ToString();
+        branchLenghtInput.text = data.branchLength.ToString();
         string ruleName = data.ruleConfigFile != null ? data.ruleConfigFile.name : "";
         int index = ruleDropdown.options.FindIndex(opt => opt.text == ruleName);
         if (index >= 0)
@@ -78,6 +80,7 @@ public class UIController : MonoBehaviour
             ruleDropdown.value = index;
         }
         flowersSlider.value = data.flowerSpawnProbability;
+        singlePlantSlider.value = data.iterations;
     }
 
     public void CloseUI()
@@ -85,7 +88,6 @@ public class UIController : MonoBehaviour
         uiCanvas.SetActive(false);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        isUIOpen = false;
 
         // Enables the player movement and interactions
         if (playerView != null)
@@ -132,6 +134,19 @@ public class UIController : MonoBehaviour
         else
         {
             Debug.LogWarning("Invalid Scale input");
+        }
+    }
+
+    public void setBranchLenght()
+    {
+        float branchValue;
+        if (float.TryParse(branchLenghtInput.text, out branchValue))
+        {
+            hit_plant.GetComponent<PlantGenerator>().SetBranchLenght(branchValue);
+        }
+        else
+        {
+            Debug.LogWarning("Invalid Branch lentgh input");
         }
     }
 
@@ -196,12 +211,18 @@ public class UIController : MonoBehaviour
 
     public void SinglePlantGrowth()
     {
-
+        if (hit_plant == null) return;
+        var plantGenerator = hit_plant.GetComponent<PlantGenerator>();
+        int iterationsNumber = (int)singlePlantSlider.value;
+        plantGenerator.SetIterations(iterationsNumber);
+        plantGenerator.RegeneratePlant();
+        hit_plant = plantGenerator.gameObject;
     }
 
     public void MultiplePlantsGrowth()
     {
-        
+        int iterationsNumber = (int)multiplePlantSlider.value;
+        StartCoroutine(plantController.GetComponent<PlantSimulationController>().MultiplePlantsGrowthRoutine(iterationsNumber));     
     }
 
 }

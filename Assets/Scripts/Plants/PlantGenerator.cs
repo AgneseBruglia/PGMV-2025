@@ -19,6 +19,9 @@ public class PlantGenerator : MonoBehaviour
     [Range(0.1f, 10f)]
     public float scale = 1f;
     public float delta = 20f;
+    [Range(0.1f, 5f)]
+    public float branchLength = 1f;
+
     [Range(0f, 1f)]
     public float flowerSpawnProbability = 0.25f;
 
@@ -134,14 +137,23 @@ public class PlantGenerator : MonoBehaviour
         Stack<TransformInfo> transformStack = new Stack<TransformInfo>();
         Transform turtle = new GameObject("Turtle").transform;
         turtle.position = startPosition;
-
+        int depth = 0;
         foreach (char c in lsystem)
         {
+            float depthFactor = Mathf.Pow(0.8f, depth);
+            float iterationFactor = Mathf.Pow(0.8f, iterations);
+            float scaleFactor = depthFactor * iterationFactor;
+            float shrinkFactor = Mathf.Pow(0.9f, iterations);
             switch (c)
             {
                 case 'F':
                     GameObject branch = Instantiate(branchPrefab, turtle.position, turtle.rotation, parent);
                     branch.transform.localScale *= scale;
+                    branch.transform.localScale = new Vector3(
+                        branch.transform.localScale.x * shrinkFactor,
+                        branch.transform.localScale.y * branchLength * scaleFactor,
+                        branch.transform.localScale.z * shrinkFactor
+                    );
                     float length = branch.transform.localScale.y;
                     branch.transform.Translate(Vector3.up * length / 2f);
                     turtle.Translate(Vector3.up * length);
@@ -157,7 +169,7 @@ public class PlantGenerator : MonoBehaviour
                         );
                         Quaternion randomRot = turtle.rotation * offsetRot;
                         GameObject leaf = Instantiate(leafPrefab, turtle.position, randomRot, parent);
-                        leaf.transform.localScale *= scale;
+                        leaf.transform.localScale *= scale * scaleFactor;
                         Renderer rend = leaf.GetComponentInChildren<Renderer>();
                         if (rend != null)
                         {
@@ -171,26 +183,9 @@ public class PlantGenerator : MonoBehaviour
                         leaf.AddComponent<WindEffect>();
                     }
                     break;
-                case '&':
-                    turtle.Rotate(Vector3.right * delta);
-                    break;
-                case '^':
-                    turtle.Rotate(Vector3.right * -delta);
-                    break;
-                case '/':
-                    turtle.Rotate(Vector3.forward * -delta);
-                    break;
-                case '\\':
-                    turtle.Rotate(Vector3.forward * delta);
-                    break;
-                case '+':
-                    turtle.Rotate(Vector3.up * delta);
-                    break;
-                case '-':
-                    turtle.Rotate(Vector3.up * -delta);
-                    break;
                 case '[':
                     transformStack.Push(new TransformInfo(turtle.position, turtle.rotation));
+                    depth++;
                     break;
                 case ']':
                     if (transformStack.Count > 0)
@@ -198,6 +193,7 @@ public class PlantGenerator : MonoBehaviour
                         TransformInfo ti = transformStack.Pop();
                         turtle.position = ti.position;
                         turtle.rotation = ti.rotation;
+                        depth--;
                         if (flowerPrefab != null && Random.value < flowerSpawnProbability)
                         {
                             Quaternion randomRot = turtle.rotation * Quaternion.Euler(
@@ -208,14 +204,19 @@ public class PlantGenerator : MonoBehaviour
                             Vector3 offset = turtle.forward * 0.05f;
                             Vector3 flowerPosition = turtle.position + offset;
                             GameObject flower = Instantiate(flowerPrefab, flowerPosition, randomRot, parent);
-                            flower.transform.localScale *= scale;
+                            flower.transform.localScale *= scale * scaleFactor;
                             flower.AddComponent<WindEffect>();
                         }
                     }
                     break;
+                case '&': turtle.Rotate(Vector3.right * delta); break;
+                case '^': turtle.Rotate(Vector3.right * -delta); break;
+                case '/': turtle.Rotate(Vector3.forward * -delta); break;
+                case '\\': turtle.Rotate(Vector3.forward * delta); break;
+                case '+': turtle.Rotate(Vector3.up * delta); break;
+                case '-': turtle.Rotate(Vector3.up * -delta); break;
             }
         }
-
         Destroy(turtle.gameObject);
     }
 
@@ -243,6 +244,7 @@ public class PlantGenerator : MonoBehaviour
             iterations = this.iterations,
             ruleConfigFile = this.ruleConfigFile,
             scale = this.scale,
+            branchLength = this.branchLength,
             delta = this.delta,
             flowerSpawnProbability = this.flowerSpawnProbability
         };
@@ -263,6 +265,11 @@ public class PlantGenerator : MonoBehaviour
         scale = Mathf.Clamp(value, 0.1f, 10f);
     }
 
+    public void SetBranchLenght(float value)
+    {
+        branchLength = Mathf.Clamp(value, 0.1f, 10f);
+    }
+
     public void SetDelta(float value)
     {
         delta = value;
@@ -276,7 +283,6 @@ public class PlantGenerator : MonoBehaviour
     // Generates the new plant after changes in the interface
     public void RegeneratePlant()
     {
-        // Rimuovi i componenti fisici se esistono
         BoxCollider oldCollider = GetComponent<BoxCollider>();
         if (oldCollider != null)
             Destroy(oldCollider);
@@ -285,19 +291,15 @@ public class PlantGenerator : MonoBehaviour
         if (oldRb != null)
             Destroy(oldRb);
 
-        // Rimuovi i figli (pianta vecchia)
         foreach (Transform child in transform)
             Destroy(child.gameObject);
 
-        // Ricarica le regole
         LoadRulesFromJSON();
 
         Vector3 startPosition = transform.position;
 
-        // Genera il vaso e aggiorna posizione iniziale
         GeneratePot(ref startPosition);
 
-        // Crea L-system e disegna la pianta
         if (iterations > 0)
         {
             if (string.IsNullOrEmpty(axiom))
@@ -312,13 +314,11 @@ public class PlantGenerator : MonoBehaviour
             Debug.Log("Plant regenerated!");
         }
 
-        // Aspetta un frame e poi aggiungi Rigidbody e BoxCollider
         StartCoroutine(ReattachPhysicsAfterFrame());
     }
 
     private IEnumerator ReattachPhysicsAfterFrame()
     {
-        // Aspetta un frame per assicurarsi che Destroy() sia completato
         yield return null;
 
         Renderer[] renderers = GetComponentsInChildren<Renderer>();
