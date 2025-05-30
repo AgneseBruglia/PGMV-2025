@@ -172,20 +172,25 @@ public class Cabinet : MonoBehaviour
             BoxCollider boxCollider = door_instance_final.AddComponent<BoxCollider>();
             boxCollider.isTrigger = true;
 
-            // Definisci una zona più ampia intorno alla porta
-            float extraWidth = 10f;
-            float extraHeight = 2f;
-            float extraDepth = 10f;
-
             Vector3 scaledSize = door_instance_final.transform.localScale;
-            boxCollider.size = new Vector3(
-                scaledSize.x + extraWidth,
-                scaledSize.y + extraHeight,
-                scaledSize.z + extraDepth
-            );
+
+            // Definisci una zona più ampia intorno alla porta
+            // We only need in front of the door cabinet
+            float extraWidth = 0;
+            float extraHeight = 0;
+            float extraDepth = 1f;
 
             boxCollider.center = Vector3.zero; // oppure regola se vuoi spostarlo in avanti
             boxCollider.isTrigger = true;
+
+
+            // Move the collider's center along the X-axis
+            Vector3 newCenter = boxCollider.center;
+            newCenter.x += 1.0f; // Move 1 unit to the right
+            boxCollider.center = newCenter;
+
+
+            boxCollider.center = newCenter;
         }
 
         else{

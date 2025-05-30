@@ -3,10 +3,11 @@ using UnityEngine;
 public class DoorController : MonoBehaviour
 {
     public Transform door;                            // Riferimento alla porta
-    public Vector3 openOffset = new Vector3(0, 0, 2); // Spostamento della porta per l'apertura
+    public Vector3 openOffset; // Spostamento della porta per l'apertura - can't be fixed position
     public float speed = 2f;                          // Velocità movimento porta
 
     private Vector3 originalPosition;
+    private Vector3 originalRotation;
     private Vector3 openPosition;
     private bool isOpen = false;
     private bool isMoving = false;
@@ -16,8 +17,9 @@ public class DoorController : MonoBehaviour
     {
         if (door != null)
         {
-            originalPosition = door.position;
-            openPosition = originalPosition + openOffset;
+            openOffset       = new Vector3(0, 0, transform.localScale.z);
+            originalPosition = door.localPosition;
+            openPosition     = originalPosition + openOffset;
         }
         else
         {
@@ -26,38 +28,38 @@ public class DoorController : MonoBehaviour
     }
 
     void Update()
-{
-    if (playerInRange && Input.GetKeyDown(KeyCode.E) && door != null)
     {
-        isOpen = !isOpen;
-        isMoving = true;
-
-        // Disattiva collider se la porta si apre
-        Collider doorCollider = door.GetComponent<Collider>();
-        if (doorCollider != null)
+        if (playerInRange && Input.GetKeyDown(KeyCode.E) && door != null)
         {
-            doorCollider.enabled = !isOpen;
+            isOpen = !isOpen;
+            isMoving = true;
+
+            // Disattiva collider se la porta si apre
+            Collider doorCollider = door.GetComponent<Collider>();
+            if (doorCollider != null)
+            {
+                doorCollider.enabled = !isOpen;
+            }
+        }
+
+        if (isMoving)
+        {
+            Vector3 target = isOpen ? openPosition : originalPosition;
+            //door.position = Vector3.MoveTowards(door.position, target, speed * Time.deltaTime);
+            door.localPosition = Vector3.MoveTowards(door.localPosition, target, speed * Time.deltaTime);
+
+
+            if (Vector3.Distance(door.position, target) < 0.01f)
+            {
+                door.position = target;
+                isMoving = false;
+            }
         }
     }
-
-    if (isMoving)
-    {
-        Vector3 target = isOpen ? openPosition : originalPosition;
-        door.position = Vector3.MoveTowards(door.position, target, speed * Time.deltaTime);
-
-        if (Vector3.Distance(door.position, target) < 0.01f)
-        {
-            door.position = target;
-            isMoving = false;
-        }
-    }
-}
-
 
     private void OnTriggerEnter(Collider other)
     {
         if(other.name=="collider"){
-            Debug.Log("ENTER COLLIDER: " + other.name);
             playerInRange= true;
         }
         
@@ -66,7 +68,6 @@ public class DoorController : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         if(other.name=="collider"){
-            Debug.Log("EXITED COLLIDER: " + other.name);
             playerInRange= false;
         }
     }
