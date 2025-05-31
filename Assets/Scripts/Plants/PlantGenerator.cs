@@ -13,7 +13,7 @@ public class PlantGenerator : MonoBehaviour
     [Header("L-System Settings")]
     private string axiom;
     public int iterations = 3;
-    public TextAsset ruleConfigFile;
+    public string ruleFileName;
 
     [Header("Plant Settings")]
     [Range(0.1f, 10f)]
@@ -31,67 +31,27 @@ public class PlantGenerator : MonoBehaviour
 
     void Start()
     {
-        LoadRulesFromJSON();
-        Vector3 startPosition = transform.position;
-
-        string lSystem = GenerateLSystem(axiom, rules, iterations);
-        Debug.Log("Final L-System: " + lSystem);
-
-        GeneratePot(ref startPosition);        
-
-        // Draws the plant
-        DrawLSystem(lSystem, startPosition, gameObject.transform);
-
-        // Calculates bounds for the boxcollider
-        Renderer[] renderers = gameObject.GetComponentsInChildren<Renderer>();
-        Bounds combinedBounds = new Bounds();
-        bool initialized = false;
-
-        foreach (Renderer rend in renderers)
+        string[] fileNames = new string[]
         {
-            if (!initialized)
-            {
-                combinedBounds = rend.bounds;
-                initialized = true;
-            }
-            else
-            {
-                combinedBounds.Encapsulate(rend.bounds);
-            }
-        }
-
-        if (initialized)
-        {
-            BoxCollider box = gameObject.AddComponent<BoxCollider>();
-
-            // Convert bounds center and size from world space to local space
-            box.center = gameObject.transform.InverseTransformPoint(combinedBounds.center);
-            box.size = gameObject.transform.InverseTransformVector(combinedBounds.size);
-            box.size *= 0.9f;
-
-            box.isTrigger = false;
-
-            Rigidbody rb = gameObject.AddComponent<Rigidbody>();
-            rb.useGravity = true;
-            rb.isKinematic = false;
-
-            gameObject.tag = "Plant";
-        }
-        else
-        {
-            Debug.LogWarning("No renderers found to calculate bounds.");
-        }
+            "LSystemRules1.json",
+            "LSystemRules2.json",
+            "LSystemRules3.json"
+        };
+        StartCoroutine(RuleFileManager.CopyRulesFromStreamingAssets(fileNames));
+        GeneratePlant();
     }
 
-    void LoadRulesFromJSON()
+    void LoadRulesFromJSON(string filePath)
     {
-        if (ruleConfigFile == null)
+        if (!System.IO.File.Exists(filePath))
         {
-            Debug.LogError("Rules not found: assign a JSON file to 'ruleConfigFile'");
+            Debug.LogError("Rules file not found: " + filePath);
             return;
         }
 
-        LSystemRuleSet[] ruleSets = JsonHelper.FromJson<LSystemRuleSet>(ruleConfigFile.text);
+        string jsonText = System.IO.File.ReadAllText(filePath);
+
+        LSystemRuleSet[] ruleSets = JsonHelper.FromJson<LSystemRuleSet>(jsonText);
         rules.Clear();
         foreach (var ruleSet in ruleSets)
         {
@@ -242,7 +202,7 @@ public class PlantGenerator : MonoBehaviour
         return new Plant
         {
             iterations = this.iterations,
-            ruleConfigFile = this.ruleConfigFile,
+            ruleFileName = this.ruleFileName,
             scale = this.scale,
             branchLength = this.branchLength,
             delta = this.delta,
@@ -255,9 +215,9 @@ public class PlantGenerator : MonoBehaviour
         iterations = value;
     }
 
-    public void SetRuleConfigFile(TextAsset file)
+    public void SetRuleConfigFile(string fileName)
     {
-        ruleConfigFile = file;
+        ruleFileName = fileName;
     }
 
     public void SetScale(float value)
@@ -280,24 +240,30 @@ public class PlantGenerator : MonoBehaviour
         flowerSpawnProbability = Mathf.Clamp01(value);
     }
 
-    // Generates the new plant after changes in the interface
-    public void RegeneratePlant()
+    // Generates the plant
+    public void GeneratePlant()
     {
         BoxCollider oldCollider = GetComponent<BoxCollider>();
-        if (oldCollider != null)
-            Destroy(oldCollider);
+        if (oldCollider != null) Destroy(oldCollider);
 
         Rigidbody oldRb = GetComponent<Rigidbody>();
-        if (oldRb != null)
-            Destroy(oldRb);
+        if (oldRb != null) Destroy(oldRb);
 
         foreach (Transform child in transform)
             Destroy(child.gameObject);
 
-        LoadRulesFromJSON();
+        if (!string.IsNullOrEmpty(ruleFileName))
+        {
+            string filePath = RuleFileManager.GetRuleFilePath(ruleFileName);
+            LoadRulesFromJSON(filePath);
+        }
+        else
+        {
+            Debug.LogError("Rule config file name not set!");
+            return;
+        }
 
         Vector3 startPosition = transform.position;
-
         GeneratePot(ref startPosition);
 
         if (iterations > 0)
@@ -311,7 +277,7 @@ public class PlantGenerator : MonoBehaviour
             string lSystem = GenerateLSystem(axiom, rules, iterations);
             DrawLSystem(lSystem, startPosition, transform);
 
-            Debug.Log("Plant regenerated!");
+            Debug.Log("Plant generated!");
         }
 
         StartCoroutine(ReattachPhysicsAfterFrame());
@@ -373,9 +339,8 @@ public class PlantGenerator : MonoBehaviour
 
     public void SimulateStep(int iteration)
     {
-        Debug.Log($"SimulateStep chiamato con iteration: {iteration}");
         SetIterations(iteration);
-        RegeneratePlant();
+        GeneratePlant();
     }
 
     struct TransformInfo

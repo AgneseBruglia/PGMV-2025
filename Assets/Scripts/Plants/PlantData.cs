@@ -4,7 +4,7 @@ using UnityEngine;
 public struct Plant
 {
     public int iterations;
-    public TextAsset ruleConfigFile;
+    public string ruleFileName;
     public float scale;
     public float branchLength;
     public float delta;

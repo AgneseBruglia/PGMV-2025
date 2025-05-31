@@ -105,7 +105,7 @@ public class PlantSimulationController : MonoBehaviour
         foreach (var plant in plantsToGrow)
         {
             plant.SetIterations(iterations);
-            plant.RegeneratePlant();
+            plant.GeneratePlant();
             yield return null;
         }
     }

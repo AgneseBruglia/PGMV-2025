@@ -14,7 +14,7 @@ public class UIController : MonoBehaviour
     public Crossair crosshairScript;
 
     private GameObject hit_plant;
-    public List<TextAsset> ruleConfigFiles;
+
     public TMP_InputField iterationsInput;
     public TMP_Dropdown ruleDropdown;
     public TMP_InputField scaleInput;
@@ -37,7 +37,7 @@ public class UIController : MonoBehaviour
             Camera mainCam = Camera.main;
             if (mainCam != null)
                 playerView = mainCam.GetComponent<PlayerView>();
-                crosshairScript = mainCam.GetComponent<Crossair>();
+            crosshairScript = mainCam.GetComponent<Crossair>();
         }
         CloseUI();
         toggleWindButton.onClick.AddListener(ToggleText);
@@ -62,7 +62,6 @@ public class UIController : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
-        // Disables the player movement and interactions
         if (playerView != null)
             playerView.enabled = false;
 
@@ -70,23 +69,28 @@ public class UIController : MonoBehaviour
             playerController.enabled = false;
 
         if (crosshairScript != null)
-            crosshairScript.enabled = false; 
+            crosshairScript.enabled = false;
 
         hit_plant = plant;
 
         Plant data = plant.GetComponent<PlantGenerator>().GetValues();
 
-        // Setting of the default values
+        // Default values
         iterationsInput.text = data.iterations.ToString();
         angleInput.text = data.delta.ToString();
         scaleInput.text = data.scale.ToString();
         branchLenghtInput.text = data.branchLength.ToString();
-        string ruleName = data.ruleConfigFile != null ? data.ruleConfigFile.name : "";
+        string ruleName = data.ruleFileName ?? "";
         int index = ruleDropdown.options.FindIndex(opt => opt.text == ruleName);
         if (index >= 0)
         {
             ruleDropdown.value = index;
         }
+        else
+        {
+            ruleDropdown.value = 0; // fallback
+        }
+
         flowersSlider.value = data.flowerSpawnProbability;
         singlePlantSlider.value = data.iterations;
     }
@@ -97,7 +101,6 @@ public class UIController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = true;
 
-        // Enables the player movement and interactions
         if (playerView != null)
             playerView.enabled = true;
 
@@ -105,7 +108,7 @@ public class UIController : MonoBehaviour
             playerController.enabled = true;
 
         if (crosshairScript != null)
-            crosshairScript.enabled = true; 
+            crosshairScript.enabled = true;
     }
 
     public void setIterations()
@@ -124,14 +127,14 @@ public class UIController : MonoBehaviour
     public void setRules()
     {
         string selectedRuleName = ruleDropdown.options[ruleDropdown.value].text;
-        TextAsset selectedFile = ruleConfigFiles.Find(file => file.name == selectedRuleName);
-        if (selectedFile != null)
+        var plantGenerator = hit_plant.GetComponent<PlantGenerator>();
+        if (plantGenerator != null)
         {
-            hit_plant.GetComponent<PlantGenerator>().SetRuleConfigFile(selectedFile);
+            plantGenerator.SetRuleConfigFile(selectedRuleName + ".json");
         }
         else
         {
-            Debug.LogWarning($"No TextAsset found with the name {selectedRuleName}");
+            Debug.LogWarning("PlantGenerator component not found!");
         }
     }
 
@@ -193,7 +196,7 @@ public class UIController : MonoBehaviour
     private IEnumerator ApplyChangesRoutine(PlantGenerator plantGenerator)
     {
         yield return StartCoroutine(plantGenerator.ResetPlant());
-        plantGenerator.RegeneratePlant();
+        plantGenerator.GeneratePlant();
         hit_plant = plantGenerator.gameObject;
     }
 
@@ -226,7 +229,7 @@ public class UIController : MonoBehaviour
         var plantGenerator = hit_plant.GetComponent<PlantGenerator>();
         int iterationsNumber = (int)singlePlantSlider.value;
         plantGenerator.SetIterations(iterationsNumber);
-        plantGenerator.RegeneratePlant();
+        plantGenerator.GeneratePlant();
         hit_plant = plantGenerator.gameObject;
     }
 
