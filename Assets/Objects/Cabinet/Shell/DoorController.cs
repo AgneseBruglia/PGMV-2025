@@ -34,7 +34,7 @@ public class DoorController : MonoBehaviour
         if (playerInRange && Input.GetKeyDown(KeyCode.E) && door != null)
         {
             isOpen = !isOpen;
-
+            Debug.Log("playerInRange pressed E");
             if (!isOpen)
             {
                 Transform parent = transform.parent; //Important to be the parent (this script needs to be in a first child)
@@ -50,7 +50,7 @@ public class DoorController : MonoBehaviour
                     }
                 }
             }
-
+            Debug.Log("playerInRange after close other doors");
             is_moving = true;
 
             // Disattiva collider se la porta si apre
@@ -60,7 +60,10 @@ public class DoorController : MonoBehaviour
                 doorCollider.enabled = !isOpen;
             }
 
+            
+
             Vector3 target = isOpen ? openPosition : originalPosition;
+            Debug.Log("Start routine");
             StartCoroutine(
                 moveDoor(
                     door,
@@ -74,16 +77,20 @@ public class DoorController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("is playerInRange=true; enter");
         if(other.name=="collider"){
-            playerInRange= true;
+            Debug.Log("yes");
+            playerInRange = true;
         }
         
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if(other.name=="collider"){
-            playerInRange= false;
+        Debug.Log("is playerInRange=true; exit");
+        if (other.name=="collider"){
+            Debug.Log("yes");
+            playerInRange = false;
         }
     }
 

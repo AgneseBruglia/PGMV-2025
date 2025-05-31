@@ -87,8 +87,8 @@ public class CabinetDoorController : MonoBehaviour
     }
 
     public void OnPlayerInteract()
-{
-    open = !open;
-}
+    {
+        open = !open;
+    }
 
 }
