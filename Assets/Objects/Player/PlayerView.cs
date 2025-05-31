@@ -18,9 +18,8 @@ public class PlayerView : MonoBehaviour
         //Cursor.lockState= CursorLockMode.None;
         Cursor.visible= true;
         cameraToToggle = GameObject.FindWithTag("Camera");
-
     }
-
+    
     // Update is called once per frame
     void Update()
     {
@@ -38,19 +37,43 @@ public class PlayerView : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit, interactLength))
             {
+                Debug.Log(" interactableTags: " + string.Join(", ", interactableTags));
                 Debug.Log("Hit: " + hit.collider.name + " with tag: " + hit.collider.tag);
+                Debug.Log("hit.transform.CompareTag(\"DraerDor\"):" + hit.transform.CompareTag("DrawerDoor"));
 
-                if (hit.transform.CompareTag("Plant") || hit.collider.name == "Plant" || hit.collider.name == "PrefabPickupPlant")
+                if (hit.transform.CompareTag("Cubicle"))
+                {
+                    // Grabs the plant and shows the settings interface
+                    hit.transform.gameObject.GetComponent<CubicleController>().getPlant();
+                    return;
+                }
+
+                if (hit.transform.CompareTag("Drawer"))
+                {
+                    // Grabs the plant and shows the settings interface
+                    hit.transform.gameObject.GetComponent<DrawerController>().getPlant();
+                    return;
+                }
+
+                if (hit.transform.CompareTag("Shelve"))
+                {
+                    // Grabs the plant and shows the settings interface
+                    hit.transform.gameObject.GetComponent<ShelveController>().getPlant();
+                    return;
+                }
+
+                if (hit.transform.CompareTag("Plant") || hit.collider.name == "Plant")
                 {
                     // Grabs the plant and shows the settings interface
                     player.GetComponent<PickUpPlant>().grab(hit);
-                    //hit.transform.SendMessage("grab", hit, SendMessageOptions.DontRequireReceiver);
                     return;
                 }
+
                 foreach (string tag in interactableTags)
                 {
                     if (hit.transform.CompareTag(tag))
                     {
+                        Debug.Log("before send message : " + hit.collider.tag);
                         hit.transform.SendMessage("OnPlayerInteract", SendMessageOptions.DontRequireReceiver);
                         break;
                     }
@@ -74,7 +97,6 @@ public class PlayerView : MonoBehaviour
             }
         }
     }
-
 
     private void OnDrawGizmosSelected(){
         Gizmos.color= Color.blue;

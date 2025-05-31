@@ -55,6 +55,19 @@ public class PickUpPlant : MonoBehaviour
         }
     }
 
+    public void grabFromCabinet(GameObject content)
+    {
+        grabbed_obj = content;
+        Debug.Log("grabFromCabinet");
+        grabbed_rigidbody = grabbed_obj.GetComponent<Rigidbody>();
+        grabbed_rigidbody.useGravity = false;
+        grabbed_rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
+
+        player.GetComponent<ArmGenerator>().grab_pose();
+
+        release = false;
+    }
+
     void drop()
     {
         release = true;

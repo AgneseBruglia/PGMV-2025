@@ -347,4 +347,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   door: {fileID: 1031417360584022427}
   openOffset: {x: 0, y: 0, z: 4.1}
-  speed: 3
+  speed: 5

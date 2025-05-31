@@ -21,6 +21,9 @@ TagManager:
   - BOTTOM_JET
   - CubicleDoor
   - Drawer
+  - Cubicle
+  - DrawerDoor
+  - Shelve
   layers:
   - Default
   - TransparentFX

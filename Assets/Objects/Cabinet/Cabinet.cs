@@ -16,6 +16,7 @@ public class Cabinet : MonoBehaviour
     public GameObject prefab_door_part; // door child
     private GameObject door; // door parent
     private Light cabinetLight; // Reference to the light component
+    public AudioClip cabinet_door_open_close_clip;
 
     private Vector3 minPosition;
     private Vector3 maxPosition;
@@ -172,30 +173,30 @@ public class Cabinet : MonoBehaviour
             BoxCollider boxCollider = door_instance_final.AddComponent<BoxCollider>();
             boxCollider.isTrigger = true;
 
-            Vector3 scaledSize = door_instance_final.transform.localScale;
-
-            // Definisci una zona più ampia intorno alla porta
-            // We only need in front of the door cabinet
-            float extraWidth = 0;
-            float extraHeight = 0;
-            float extraDepth = 1f;
-
             boxCollider.center = Vector3.zero; // oppure regola se vuoi spostarlo in avanti
             boxCollider.isTrigger = true;
-
 
             // Move the collider's center along the X-axis
             Vector3 newCenter = boxCollider.center;
             newCenter.x += 1.0f; // Move 1 unit to the right
             boxCollider.center = newCenter;
-
-
-            boxCollider.center = newCenter;
         }
-
-        else{
+        else
+        {
             Debug.LogWarning("Il collider ci sta");
         }
+
+        // Create a new AudioSource component
+        AudioSource audio_cabinet_door = door_instance_final.AddComponent<AudioSource>();
+
+        // Configure the AudioSource
+        audio_cabinet_door.clip = cabinet_door_open_close_clip;
+        audio_cabinet_door.playOnAwake = false;
+        audio_cabinet_door.loop = false;
+        audio_cabinet_door.volume = 1.0f;
+
+        // Play the audio (optional)
+        audio_cabinet_door.Stop();
 
         transform.position = parent_position;
         transform.rotation = parent_rotation;

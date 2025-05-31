@@ -1,16 +1,18 @@
 using UnityEngine;
+using System.Collections;
+
 
 public class DoorController : MonoBehaviour
 {
-    public Transform door;                            // Riferimento alla porta
+    public Transform door;     // Riferimento alla porta
     public Vector3 openOffset; // Spostamento della porta per l'apertura - can't be fixed position
-    public float speed = 2f;                          // Velocità movimento porta
+    public float speed = 5f;   // Velocità movimento porta
 
     private Vector3 originalPosition;
     private Vector3 originalRotation;
     private Vector3 openPosition;
     private bool isOpen = false;
-    private bool isMoving = false;
+    private bool is_moving = false;
     private bool playerInRange = false;
 
     void Start()
@@ -32,7 +34,24 @@ public class DoorController : MonoBehaviour
         if (playerInRange && Input.GetKeyDown(KeyCode.E) && door != null)
         {
             isOpen = !isOpen;
-            isMoving = true;
+
+            if (!isOpen)
+            {
+                Transform parent = transform.parent; //Important to be the parent (this script needs to be in a first child)
+                if (parent != null)
+                {
+                    foreach (Transform child in parent)
+                    {
+                        // Close all doors inside the cabinet
+                        if (child.CompareTag("Cubicle") || child.CompareTag("Drawer"))
+                        {
+                            child.gameObject.SendMessage("OnCabinetDoorClose", SendMessageOptions.DontRequireReceiver);
+                        }
+                    }
+                }
+            }
+
+            is_moving = true;
 
             // Disattiva collider se la porta si apre
             Collider doorCollider = door.GetComponent<Collider>();
@@ -40,20 +59,16 @@ public class DoorController : MonoBehaviour
             {
                 doorCollider.enabled = !isOpen;
             }
-        }
 
-        if (isMoving)
-        {
             Vector3 target = isOpen ? openPosition : originalPosition;
-            //door.position = Vector3.MoveTowards(door.position, target, speed * Time.deltaTime);
-            door.localPosition = Vector3.MoveTowards(door.localPosition, target, speed * Time.deltaTime);
-
-
-            if (Vector3.Distance(door.position, target) < 0.01f)
-            {
-                door.position = target;
-                isMoving = false;
-            }
+            StartCoroutine(
+                moveDoor(
+                    door,
+                    target,
+                    speed,
+                    isOpen
+                )
+            );
         }
     }
 
@@ -71,5 +86,36 @@ public class DoorController : MonoBehaviour
             playerInRange= false;
         }
     }
+
     
+    IEnumerator moveDoor(Transform door, Vector3 target, float speed, bool isOpen)
+    {
+        Debug.Log("in moove door");
+        if (!isOpen)
+            yield return new WaitForSeconds(0.5f); // Wait for 0.5 seconds
+
+        
+        AudioSource audio = gameObject.GetComponent<AudioSource>();
+        audio.loop = true;
+        audio.Play();
+
+        //yield return new WaitForSeconds(0.5f); // Wait for 0.5 seconds
+
+        while (is_moving)
+        {
+            // Move the door toward the target position
+            door.localPosition = Vector3.MoveTowards(door.localPosition, target, speed * Time.deltaTime);
+
+            // Check if the door has reached the target
+            if (Vector3.Distance(door.localPosition, target) < 0.01f)
+            {
+                door.localPosition = target;
+                is_moving = false;
+                
+                audio.loop = false;
+                audio.Stop();
+            }
+            yield return null; // Wait for the next frame
+        }
+    }
 }

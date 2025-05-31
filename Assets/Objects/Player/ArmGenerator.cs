@@ -197,12 +197,6 @@ public class ArmGenerator : MonoBehaviour
 
     IEnumerator moveArm(GameObject arm, ArmSide side, ArmAction action, TargetPosition target)
     {
-        isMoving[(side, action)] = true;
-
-        AudioSource audio = arm.GetComponent<AudioSource>();
-        audio.loop = true;
-        audio.Play();
-
         Transform shoulder = arm.transform.GetChild(0);
         Transform upperArm = shoulder.GetChild(1);
         Transform lowerArm = upperArm.GetChild(1);
@@ -214,11 +208,15 @@ public class ArmGenerator : MonoBehaviour
             && lowerArm.transform.localRotation == target.targetLowerArmRot
         )
         {
-            audio.loop = false;
-            audio.GetComponent<AudioSource>().Stop();
             isMoving[(side, action)] = false;
             yield break;
         }
+
+        isMoving[(side, action)] = true;
+
+        AudioSource audio = arm.GetComponent<AudioSource>();
+        audio.loop = true;
+        audio.Play();
 
         float elapsed = 0f;
 
