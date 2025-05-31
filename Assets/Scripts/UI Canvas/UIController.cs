@@ -10,6 +10,9 @@ public class UIController : MonoBehaviour
     public PlayerView playerView;
     public PlayerController playerController;
     public PlantSimulationController plantController;
+    public RulesDisplayController rulesController;
+    public Crossair crosshairScript;
+
     private GameObject hit_plant;
     public List<TextAsset> ruleConfigFiles;
     public TMP_InputField iterationsInput;
@@ -21,6 +24,7 @@ public class UIController : MonoBehaviour
     public Slider singlePlantSlider;
     public Slider multiplePlantSlider;
     public Button toggleWindButton;
+    public Button showRulesButton;
     public TextMeshProUGUI textOn;
     public TextMeshProUGUI textOff;
 
@@ -33,13 +37,14 @@ public class UIController : MonoBehaviour
             Camera mainCam = Camera.main;
             if (mainCam != null)
                 playerView = mainCam.GetComponent<PlayerView>();
+                crosshairScript = mainCam.GetComponent<Crossair>();
         }
         CloseUI();
         toggleWindButton.onClick.AddListener(ToggleText);
         UpdateText();
     }
 
-     void ToggleText()
+    void ToggleText()
     {
         isOn = !isOn;
         UpdateText();
@@ -64,6 +69,9 @@ public class UIController : MonoBehaviour
         if (playerController != null)
             playerController.enabled = false;
 
+        if (crosshairScript != null)
+            crosshairScript.enabled = false; 
+
         hit_plant = plant;
 
         Plant data = plant.GetComponent<PlantGenerator>().GetValues();
@@ -87,7 +95,7 @@ public class UIController : MonoBehaviour
     {
         uiCanvas.SetActive(false);
         Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        Cursor.visible = true;
 
         // Enables the player movement and interactions
         if (playerView != null)
@@ -95,6 +103,9 @@ public class UIController : MonoBehaviour
 
         if (playerController != null)
             playerController.enabled = true;
+
+        if (crosshairScript != null)
+            crosshairScript.enabled = true; 
     }
 
     public void setIterations()
@@ -222,7 +233,12 @@ public class UIController : MonoBehaviour
     public void MultiplePlantsGrowth()
     {
         int iterationsNumber = (int)multiplePlantSlider.value;
-        StartCoroutine(plantController.GetComponent<PlantSimulationController>().MultiplePlantsGrowthRoutine(iterationsNumber));     
+        StartCoroutine(plantController.GetComponent<PlantSimulationController>().MultiplePlantsGrowthRoutine(iterationsNumber));
     }
 
+    public void DisplayRules()
+    {
+        Debug.Log("Rules button clicked");
+        rulesController.ToggleRulesCanvas();
+    }
 }

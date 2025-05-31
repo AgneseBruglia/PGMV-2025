@@ -140,8 +140,8 @@ public class PlantGenerator : MonoBehaviour
         int depth = 0;
         foreach (char c in lsystem)
         {
-            float depthFactor = Mathf.Pow(0.8f, depth);
-            float iterationFactor = Mathf.Pow(0.8f, iterations);
+            float depthFactor = Mathf.Pow(0.9f, depth);
+            float iterationFactor = Mathf.Pow(0.9f, iterations);
             float scaleFactor = depthFactor * iterationFactor;
             float shrinkFactor = Mathf.Pow(0.9f, iterations);
             switch (c)
