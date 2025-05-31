@@ -6,19 +6,24 @@ public class CabinetWithPlants : MonoBehaviour
 {
     public TextAsset xml_asset;
 
-    public GameObject prefab_p; // prefab_p
-    public GameObject prefab_c; // prefabC
-    public GameObject prefab_g; // prefabG
-    public GameObject prefab_l; // light
-    public GameObject shell_corner; // Cabinet part 1,3,7,9
-    public GameObject shell_middle; // Cabinet part 2, 4, 6, 8
-    public GameObject shell_center; // Cabinet part 5
-    public GameObject prefab_door_part; // door child
-    public GameObject plant_prefab; // Prefab della pianta
+    // Prefab del cabinet (strutturali)
+    public GameObject prefab_p; // blocco P
+    public GameObject prefab_c; // blocco C
+    public GameObject prefab_g; // blocco G
+    public GameObject prefab_l; // luce
+    public GameObject shell_corner; // angoli del cabinet
+    public GameObject shell_middle; // bordi del cabinet
+    public GameObject shell_center; // centro del cabinet
+    public GameObject prefab_door_part; // porta
 
-    private GameObject door; // door parent
-    private Vector3 minPosition;
-    private Vector3 maxPosition;
+    // Prefab per la pianta (L-System)
+    public GameObject branchPrefab; // ramo della pianta 
+    public GameObject leafPrefab;   // foglia della pianta 
+    public GameObject potPrefab;    // vaso della pianta 
+    public GameObject prefab_flower; // opzionale: fiore
+    public TextAsset plantRulesJson; // regole L-System
+
+    private GameObject door;
 
     private void Awake()
     {
@@ -61,11 +66,11 @@ public class CabinetWithPlants : MonoBehaviour
 
                 Vector3 position = new Vector3(0, m, n);
                 GameObject instance = Instantiate(prefab, transform);
-                instance.transform.localPosition = position;
+                instance.transform.parent = transform;
                 instance.transform.localRotation = Quaternion.identity;
-                instance.transform.localScale = Vector3.one;
+                instance.transform.localPosition = position;
 
-                // Struttura del cabinet (angoli e bordi)
+                // Cabinet structure logic (angoli e bordi)
                 if (n == 0 && m == m_max)
                     Instantiate(shell_corner, position, Quaternion.Euler(0f, 0f, 0f), transform);
                 else if (n == n_max && m == m_max)
@@ -96,7 +101,6 @@ public class CabinetWithPlants : MonoBehaviour
         door_instance.transform.localRotation = Quaternion.identity;
         door_instance.transform.localScale = new Vector3(1f, m_max + 1, n_max + 1);
 
-        // Collider
         if (!door_instance.TryGetComponent<Collider>(out _))
         {
             BoxCollider boxCollider = door_instance.AddComponent<BoxCollider>();
@@ -121,58 +125,47 @@ public class CabinetWithPlants : MonoBehaviour
             light_instance.transform.localRotation = Quaternion.identity;
             light_instance.transform.localScale = new Vector3(1f, 1f, n_max + 1);
         }
-    }
 
-    private void Start()
-    {
         InsertPlants();
     }
 
     private void InsertPlants()
-{
-    Transform[] allChildren = GetComponentsInChildren<Transform>(true);
-    int count = 0;
-
-    foreach (Transform child in allChildren)
     {
-        if (child.name.Equals("InsertPoint", System.StringComparison.OrdinalIgnoreCase))
+        Transform[] allChildren = GetComponentsInChildren<Transform>(true);
+        int count = 0;
+
+        foreach (Transform child in allChildren)
         {
-            if (plant_prefab == null)
+            if (child.name.Equals("InsertPoint", System.StringComparison.OrdinalIgnoreCase))
             {
-                Debug.LogError("🚫 plant_prefab non assegnato!");
-                return;
+                if (branchPrefab == null || leafPrefab == null || potPrefab == null || plantRulesJson == null)
+                {
+                    Debug.LogError("🚫 Prefab della pianta o JSON mancante!");
+                    continue;
+                }
+
+                GameObject plantInstance = new GameObject("ProceduralPlant");
+                plantInstance.transform.position = child.position;
+                plantInstance.transform.rotation = child.rotation;
+                plantInstance.transform.localScale = Vector3.one;
+                plantInstance.transform.parent = child;
+
+                PlantGenerator generator = plantInstance.AddComponent<PlantGenerator>();
+                generator.branchPrefab = branchPrefab;
+                generator.leafPrefab = leafPrefab;
+                generator.potPrefab = potPrefab;
+                generator.flowerPrefab = prefab_flower;
+                generator.ruleConfigFile = plantRulesJson;
+                generator.iterations = 3;
+                generator.scale = 0.3f;
+
+                Debug.Log($"🌱 Pianta generata in {child.name}");
+                count++;
             }
-
-            // Istanzia la pianta in scena (senza ancora impostare la posizione)
-            GameObject plantInstance = Instantiate(plant_prefab, transform);
-            Transform plantBase = plantInstance.transform.Find("PlantBase");
-
-            if (plantBase == null)
-            {
-                Debug.LogError("🚫 Il prefab della pianta deve contenere un GameObject chiamato 'PlantBase'");
-                return;
-            }
-
-            // Calcola offset dal root al PlantBase
-            Vector3 offset = plantBase.position - plantInstance.transform.position;
-
-            // Posiziona il root della pianta in modo che PlantBase combaci con l'InsertPoint
-            plantInstance.transform.position = child.position - offset;
-            plantInstance.transform.rotation = child.rotation;
-            plantInstance.transform.localScale = Vector3.one;
-
-            // Rendi la pianta figlia dell'InsertPoint (se desiderato)
-            plantInstance.transform.parent = child;
-
-            Debug.Log($"🌱 Pianta instanziata correttamente in {child.name}");
-            count++;
         }
+
+        Debug.Log($"✅ Totale InsertPoint trovati: {count}");
     }
-
-    Debug.Log($"✅ Totale InsertPoint trovati: {count}");
-}
-
-
 
     void Update() { }
 }
