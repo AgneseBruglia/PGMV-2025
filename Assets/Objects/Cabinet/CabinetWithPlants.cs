@@ -21,7 +21,7 @@ public class CabinetWithPlants : MonoBehaviour
     public GameObject leafPrefab;   // foglia della pianta 
     public GameObject potPrefab;    // vaso della pianta 
     public GameObject prefab_flower; // opzionale: fiore
-    public TextAsset plantRulesJson; // regole L-System
+    public string plantRulesJson; // regole L-System
 
     private GameObject door;
 
@@ -155,7 +155,7 @@ public class CabinetWithPlants : MonoBehaviour
                 generator.leafPrefab = leafPrefab;
                 generator.potPrefab = potPrefab;
                 generator.flowerPrefab = prefab_flower;
-                generator.ruleConfigFile = plantRulesJson;
+                generator.ruleFileName = plantRulesJson;
                 generator.iterations = 3;
                 generator.scale = 0.3f;
 
