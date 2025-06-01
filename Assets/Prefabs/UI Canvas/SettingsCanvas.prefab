@@ -2908,7 +2908,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 196, y: -1.8045654}
+  m_AnchoredPosition: {x: 196, y: -1.8045502}
   m_SizeDelta: {x: -416.13, y: -83.024}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8722431034804425140
@@ -4118,8 +4118,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: UIController, Assembly-CSharp
-        m_MethodName: DisplayRules
+        m_TargetAssemblyTypeName: RulesDisplayController, Assembly-CSharp
+        m_MethodName: ToggleRulesCanvas
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5349,7 +5349,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -196.00003, y: -1.8045654}
+  m_AnchoredPosition: {x: -196.00003, y: -1.8045502}
   m_SizeDelta: {x: -415.9996, y: -83.024}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1716926894815118503
