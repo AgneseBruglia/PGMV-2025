@@ -204,28 +204,6 @@ public class PlantGenerator : MonoBehaviour
         }
     }
 
-    // Public method to get the current plant configuration
-    public Plant GetValues()
-    {
-        return new Plant
-        {
-            iterations = this.iterations,
-            ruleFileName = this.ruleFileName,
-            scale = this.scale,
-            branchLength = this.branchLength,
-            delta = this.delta,
-            flowerSpawnProbability = this.flowerSpawnProbability
-        };
-    }
-
-    // Setters for runtime adjustment
-    public void SetIterations(int value) => iterations = value;
-    public void SetRuleConfigFile(string fileName) => ruleFileName = fileName;
-    public void SetScale(float value) => scale = Mathf.Clamp(value, 0.1f, 10f);
-    public void SetBranchLenght(float value) => branchLength = Mathf.Clamp(value, 0.1f, 10f);
-    public void SetDelta(float value) => delta = value;
-    public void SetFlowerSpawnProbability(float value) => flowerSpawnProbability = Mathf.Clamp01(value);
-
     /// <summary>
     /// Clears existing plant, if there is, and regenerates it based on current parameters.
     /// </summary>
@@ -294,6 +272,28 @@ public class PlantGenerator : MonoBehaviour
             Debug.LogWarning("No renderers found to calculate bounds.");
         }
     }
+
+    // Public method to get the current plant configuration
+    public Plant GetValues()
+    {
+        return new Plant
+        {
+            iterations = this.iterations,
+            ruleFileName = this.ruleFileName,
+            scale = this.scale,
+            branchLength = this.branchLength,
+            delta = this.delta,
+            flowerSpawnProbability = this.flowerSpawnProbability
+        };
+    }
+
+    // Setters for runtime adjustment
+    public void SetIterations(int value) => iterations = value;
+    public void SetRuleConfigFile(string fileName) => ruleFileName = fileName;
+    public void SetScale(float value) => scale = Mathf.Clamp(value, 0.1f, 10f);
+    public void SetBranchLenght(float value) => branchLength = Mathf.Clamp(value, 0.1f, 10f);
+    public void SetDelta(float value) => delta = value;
+    public void SetFlowerSpawnProbability(float value) => flowerSpawnProbability = Mathf.Clamp01(value);
 
     /// <summary>
     /// Clears current plant GameObjects and resets physics components.
