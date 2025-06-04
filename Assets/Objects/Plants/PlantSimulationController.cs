@@ -79,7 +79,11 @@ public class PlantSimulationController : MonoBehaviour
         }
         // Refresh plant list in case new ones were created
         plantGenerators = FindObjectsOfType<PlantGenerator>();
-        PlaySimulation();
+        if (simulationCoroutine == null)
+        {
+            isPaused = false;
+            simulationCoroutine = StartCoroutine(RunSimulation());
+        }
     }
 
     /// <summary>
