@@ -214,7 +214,7 @@ public class Cabinet : MonoBehaviour
             light_instance.transform.parent = transform;
             light_instance.transform.localPosition = lightPosition;
             light_instance.transform.localRotation = Quaternion.identity;
-            light_instance.transform.localScale = new Vector3(1f, 1.5f, n_max + 1);
+            light_instance.transform.localScale = new Vector3(1f, 1f, n_max + 1);
         }
     }
 
