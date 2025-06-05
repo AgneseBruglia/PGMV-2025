@@ -182,7 +182,7 @@ public class CabinetWithPlants : MonoBehaviour
             plantInstance.transform.position = insert.position;
             plantInstance.transform.rotation = insert.rotation;
             plantInstance.transform.localScale = Vector3.one;
-            plantInstance.transform.parent = insert;
+            //plantInstance.transform.parent = insert;
 
             // Configure the plant generator
             PlantGenerator generator = plantInstance.AddComponent<PlantGenerator>();
@@ -195,6 +195,18 @@ public class CabinetWithPlants : MonoBehaviour
             generator.scale = 0.3f;
 
             ruleIndex = (ruleIndex + 1) % plantRuleFileNames.Count;
+
+            // Put plant in cubicle
+            if (insert.transform.parent.transform.CompareTag("Cubicle"))
+            {
+                insert.transform.parent.transform.gameObject.GetComponent<CubicleController>().initPlant(plantInstance);
+            }
+
+            // Put plant in drawer
+            if (insert.transform.parent.transform.CompareTag("Drawer"))
+            {
+                insert.transform.parent.transform.gameObject.GetComponent<DrawerController>().initPlant(plantInstance);
+            }
         }
     }
 

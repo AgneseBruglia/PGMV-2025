@@ -30,11 +30,6 @@ public class CubicleController : MonoBehaviour
         open_rotation = close_rotation * Quaternion.Euler(0f, openAngle, 0f);
     }
 
-    void Update()
-    {
- 
-    }
-    
     public void OnPlayerInteract(){
         Debug.Log("Cubicle clicked!");
         open = !open;
@@ -98,9 +93,10 @@ public class CubicleController : MonoBehaviour
         }
     }
 
-    public void addPlant()
+    public void initPlant(GameObject plant)
     {
-        // TODO
+        content = plant;
+        content.SetActive(false);
     }
 
     IEnumerator moveDoor(Transform door, Quaternion target, float speed)

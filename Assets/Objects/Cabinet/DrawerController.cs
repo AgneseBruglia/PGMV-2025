@@ -30,9 +30,6 @@ public class DrawerController : MonoBehaviour
         open_position = close_position + open_offset;
 
         GetComponent<Collider>().enabled = open;
-
-        //add plant to module
-        initPlant();
     }
 
     void Update()
@@ -111,9 +108,10 @@ public class DrawerController : MonoBehaviour
         }
     }
 
-    public void initPlant()
+    public void initPlant(GameObject plant)
     {
-        // TODO
+        content = plant;
+        content.SetActive(false);
     }
 
     IEnumerator moveDoor(Transform door, Vector3 target, float speed)

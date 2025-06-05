@@ -26,12 +26,6 @@ public class Cabinet : MonoBehaviour
      */
     private void Awake()
     {
-        Debug.Log("Scale:" + transform.lossyScale);
-
-
-        //close_pos = new Vector3(door.position.x, door.position.y, door.position.z);
-        //open_pos = new Vector3(door.position.x, door.position.y, door.position.z + 0.9f);
-
         XmlDocument xml_doc = new XmlDocument();
         xml_doc.LoadXml(xml_asset.text);
 
@@ -50,7 +44,7 @@ public class Cabinet : MonoBehaviour
 
         foreach (XmlNode column in columns)
         {
-             int column_m_max = column.ChildNodes.Count - 1; // Rinomina m_max in column_m_max per evitare conflitti
+            int column_m_max = column.ChildNodes.Count - 1; // Rename m_max to column_m_max to avoid conflicts
             m_max = Mathf.Max(m_max, column_m_max);
             int m = 0;
             foreach (XmlNode row in column.ChildNodes)
@@ -73,7 +67,7 @@ public class Cabinet : MonoBehaviour
                         break;
                 }
 
-                // Posizione dell'oggetto
+                // Location of the object
                 Vector3 position = transform.position + new Vector3(0, m, n);
                 GameObject instance = Instantiate(prefab);
                 instance.transform.parent = transform;
@@ -81,7 +75,7 @@ public class Cabinet : MonoBehaviour
                 instance.transform.localPosition = position;
                 instance.transform.localScale = new Vector3(1, 1, 1);
 
-                // Costruzione degli angoli
+                // Construction of the corners
                 if (n == 0 && m == m_max) // Build corner 1
                 {
                     GameObject shell_corner_instance = Instantiate(shell_corner);
@@ -114,7 +108,7 @@ public class Cabinet : MonoBehaviour
                     shell_middle2_instance.transform.localPosition = position;
                     shell_middle2_instance.transform.localScale = new Vector3(1, 1, 1);
                 }
-                // Costruzione dei bordi
+                // Edge construction
                 else if (n != 0 && n != n_max && m == m_max) // Build between corner 1 to corner 2
                 {
                     GameObject shell_middle1_instance = Instantiate(shell_middle);
@@ -139,7 +133,7 @@ public class Cabinet : MonoBehaviour
                     shell_middle3_instance.transform.localPosition = position;
                     shell_middle3_instance.transform.localScale = new Vector3(1, 1, 1);
                 }
-                else // Costruzione del centro
+                else // Construction of the center
                 {
                     GameObject shell_center_instance = Instantiate(shell_center);
                     shell_center_instance.transform.parent = transform;
@@ -153,12 +147,7 @@ public class Cabinet : MonoBehaviour
             n++;
         }
 
-        // Prepara contenitore della porta
-        //door = new GameObject("Door");
-        //door.transform.parent = transform;
-        //door.transform.localPosition = Vector3.zero;
-
-        // Instanzia la porta DOPO aver calcolato m_max e n_max
+        // Instantiate the door AFTER calculating m_max and n_max
         GameObject door_instance_final = Instantiate(prefab_door_part, transform);
         float centerY = m_max / 2f;
         float centerZ = n_max / 2f;
@@ -166,14 +155,13 @@ public class Cabinet : MonoBehaviour
         door_instance_final.transform.localRotation = Quaternion.identity;
         door_instance_final.transform.localScale = new Vector3(1f, m_max + 1, n_max + 1);
 
-        // Assicurati che abbia un BoxCollider
+        // Make sure it has a BoxCollider
         if (!door_instance_final.TryGetComponent<Collider>(out _))
         {
-            Debug.LogWarning("Stiamo aggiungendo il collider");
             BoxCollider boxCollider = door_instance_final.AddComponent<BoxCollider>();
             boxCollider.isTrigger = true;
 
-            boxCollider.center = Vector3.zero; // oppure regola se vuoi spostarlo in avanti
+            boxCollider.center = Vector3.zero; // or adjust if you want to move it forward
             boxCollider.isTrigger = true;
 
             // Move the collider's center along the X-axis
@@ -195,19 +183,19 @@ public class Cabinet : MonoBehaviour
         audio_cabinet_door.loop = false;
         audio_cabinet_door.volume = 1.0f;
 
-        // Play the audio (optional)
+        // Stop the audio
         audio_cabinet_door.Stop();
 
         transform.position = parent_position;
         transform.rotation = parent_rotation;
 
-        // Posiziona una luce sopra il cabinet in base alle dimensioni calcolate
+        // Place a light above the cabinet based on the calculated dimensions
         if (prefab_l != null)
         {
             Vector3 lightPosition = new Vector3(
-                0f,         // X (come il cabinet)
-                m_max + 0.68f,  // Y sopra il punto più alto
-                n_max / 2f  // Z al centro in profondità
+                0f,         // X (like the cabinet)
+                m_max + 0.68f,  // Y above the highest point
+                n_max / 2f  // Z in the center in depth
             );
 
             GameObject light_instance = Instantiate(prefab_l);
@@ -216,11 +204,5 @@ public class Cabinet : MonoBehaviour
             light_instance.transform.localRotation = Quaternion.identity;
             light_instance.transform.localScale = new Vector3(1f, 1f, n_max + 1);
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 }

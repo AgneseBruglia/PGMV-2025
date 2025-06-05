@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 5292766469977861288}
   - component: {fileID: 8495782203300536047}
   - component: {fileID: 8821734433035766610}
+  - component: {fileID: 948668818138497300}
   m_Layer: 0
   m_Name: PrefabG_Drawers
   m_TagString: Drawer
@@ -8329,6 +8330,27 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!65 &948668818138497300
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2110790347640895792}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 0.01, z: 1}
+  m_Center: {x: 0, y: -0.53, z: 0}
 --- !u!1 &3016753473696099695
 GameObject:
   m_ObjectHideFlags: 0
@@ -8360,7 +8382,7 @@ Transform:
   m_GameObject: {fileID: 3016753473696099695}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.538, y: -0.758, z: -0.013402343}
+  m_LocalPosition: {x: 0.533, y: -0.758, z: -0.013402343}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -9379,7 +9401,7 @@ Transform:
   m_GameObject: {fileID: 8680272373442647581}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.44, z: 0}
+  m_LocalPosition: {x: 0.868, y: -0.335, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
