@@ -5,12 +5,8 @@ public class PlayerController : MonoBehaviour
 {
     public float speed = 5f;
     public float max_speed = 10f;
-
     public float jump_force = 0.5f;
     public float fall_force = 4f;
-    
-    public float turn_rate = 5f;
-    [SerializeField] bool use_physics = true;
     private Rigidbody rb;
 	
     [SerializeField] GameObject jet_bottom;
@@ -18,28 +14,25 @@ public class PlayerController : MonoBehaviour
     [SerializeField] GameObject jet_back_right;
     [SerializeField] GameObject jets;
 
-    public float gravity_force = -20f;
-
     public float mouse_sensitivity_x = 200f;
     public float mouse_sensitivity_y = 200f;
 
     private float x_rotate = 0f;
-
-    void Awake()
-    {
-        jet_bottom = GameObject.FindWithTag("JET_BOTTOM");
-        jet_back_left = GameObject.FindWithTag("JET_BACK_LEFT");
-        jet_back_right = GameObject.FindWithTag("JET_BACK_RIGHT");
-        jets = GameObject.FindWithTag("JETS");
-    }
 
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked; // Lock cursor to the center of the view
 
         rb = GetComponent<Rigidbody>();
+        // avoid gliding
         rb.linearDamping = 0; // config for falling , drag
-	
+
+        // get jets object
+        jet_bottom = GameObject.FindWithTag("JET_BOTTOM");
+        jet_back_left = GameObject.FindWithTag("JET_BACK_LEFT");
+        jet_back_right = GameObject.FindWithTag("JET_BACK_RIGHT");
+        jets = GameObject.FindWithTag("JETS");
+
         jet_bottom.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f); 
         jet_back_left.transform.localScale = new Vector3(0.0f, 0.0f, 0.0f); 
         jet_back_right.transform.localScale = new Vector3(0.0f, 0.0f, 0.0f); 
@@ -47,46 +40,31 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        rb.isKinematic = !use_physics;
-        rb.useGravity = use_physics;
-
-        //Move 
-        if (!use_physics)
-        {
-            transform.Translate(Vector3.forward * Input.GetAxis("Vertical") * speed * Time.deltaTime, Space.Self);
-            transform.Translate(Vector3.right * Input.GetAxis("Horizontal") * turn_rate  * Time.deltaTime, Space.Self);
-        }
-        else
-        {
-            //Debug.Log("Applying forces to go forward and backweards");
-            //rb.AddRelativeForce(Vector3.forward * Input.GetAxis("Vertical") * speed, ForceMode.Force);
-            //rb.AddRelativeForce(Vector3.right * Input.GetAxis("Horizontal") * speed, ForceMode.Force);
-            rb.AddRelativeForce(Vector3.forward * Input.GetAxis("Vertical") * speed, ForceMode.Force);
-            rb.AddRelativeForce(Vector3.right * Input.GetAxis("Horizontal") * speed, ForceMode.Force);
-
-            //get mouse input x,y axis, control mouse sensitivity, control frame rate
-            float x_input = Input.GetAxis("Mouse X") * mouse_sensitivity_x * 10 * Time.deltaTime;
-            float y_input = Input.GetAxis("Mouse Y") * mouse_sensitivity_y * 2 * Time.deltaTime;
-            
-            //Debug.Log("mouse x:" + x_input);
-            //Debug.Log("mouse y:" + y_input);
-            
-            // rotate XX
-            x_rotate -= y_input;
-            x_rotate = Mathf.Clamp(x_rotate, -45f, 60f); // restrict 45
-
-            transform.localRotation = Quaternion.Euler(x_rotate, transform.localRotation.eulerAngles.y, 0f); 
-            transform.Rotate(Vector3.up * x_input); // rotate YY
-        }
-
+        //Apply continuos force based on input params (Input.GetAxis("Vertical"), W,S keys - Defined in settings, //Input.GetAxis("Horizontal") , A, D keys - Defined in settings)
+        rb.AddRelativeForce(Vector3.forward * Input.GetAxis("Vertical") * speed, ForceMode.Force);
+        rb.AddRelativeForce(Vector3.right * Input.GetAxis("Horizontal") * speed, ForceMode.Force);
+        //get mouse input x,y axis, control mouse sensitivity, control frame rate
+        float x_input = Input.GetAxis("Mouse X") * mouse_sensitivity_x * 5 * Time.deltaTime;
+        float y_input = Input.GetAxis("Mouse Y") * mouse_sensitivity_y * 2 * Time.deltaTime;
+        // rotate XX
+        x_rotate -= y_input; // Invert controll so that when mouse up it looks up
+        x_rotate = Mathf.Clamp(x_rotate, -45f, 60f); // restrict minimum -45 and maximum 60f
+        //apply change players rotation (cameras are rotating to)
+        transform.localRotation = Quaternion.Euler(x_rotate, transform.localRotation.eulerAngles.y, 0f);
+        transform.Rotate(Vector3.up * x_input); // rotate YY axis (horizontal)
         //Limit velocity
-        //Debug.Log(rb.linearVelocity.magnitude);
         if (rb.linearVelocity.magnitude > max_speed)
-        {
             rb.linearVelocity = Vector3.ClampMagnitude(rb.linearVelocity, max_speed);
-        }
-		
-        //jets
+
+        jetForwardEffects();
+        jump();
+
+        if (transform.position.y < -5) { transform.position = Vector3.zero; } //Fix position if falls belloiw ground
+    }
+
+    void jetForwardEffects()
+    {
+        //Apply jet effects
         if (Input.GetAxis("Vertical") <= 0) // stopped or backwards
         {
             //Debug.Log("(" + Input.GetAxis("Horizontal") + ", " + Input.GetAxis("Vertical") + ")");
@@ -113,50 +91,58 @@ public class PlayerController : MonoBehaviour
                 jet_back_left.transform.localScale = new Vector3(0.3f, Input.GetAxis("Vertical") * 0.3f, 0.3f);
                 jet_back_right.transform.localScale = new Vector3(0.3f, Input.GetAxis("Vertical") * 0.3f, 0.3f);
                 jets.GetComponent<AudioSource>().Play();
-                
+
             }
 
             // full size = new Vector3(0.3f, 0.3f, 0.3f) (max)
             jet_back_left.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f); // if negative right engine
             jet_back_right.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
         }
-		
+    }
 
+    void jump()
+    {
         //Jump
-        if (Input.GetKeyDown(KeyCode.Space) && transform.position.y < 50)
+        if (Input.GetKeyDown(KeyCode.Space) && transform.position.y < 50) // give a initial boost
         {
-            jets.GetComponent<AudioSource>().Play();
+            //AudioSource effects
+            jets.GetComponent<AudioSource>().Play(); // set sound
             //Physics.gravity = new Vector3(0, -9.81f, 0);
             // We need the vector to have move force than the gravity, ForceMode is applied against mass
             rb.AddForce(Vector3.up * jump_force * 9.81f * rb.mass, ForceMode.Impulse);
-			jet_bottom.transform.localScale = new Vector3(0.3f, 0.9f, 0.3f);
+
+            // jet Effects
+            jet_bottom.transform.localScale = new Vector3(0.3f, 0.9f, 0.3f);
         }
-        else if (Input.GetKey(KeyCode.Space)) // In Air Acelaration
+        else if (Input.GetKey(KeyCode.Space)) // In Air Accelaration
         {
 
             jets.GetComponent<AudioSource>().Play();
             //Physics.gravity = new Vector3(0, -9.81f, 0);
             // We need the vector to have move force than the gravity, ForceMode is applied against mass
             rb.AddForce(Vector3.up * speed * 9.81f * rb.mass, ForceMode.Acceleration);
-			jet_bottom.transform.localScale = new Vector3(0.3f, 0.6f, 0.3f);
-        }       
-        else if (Input.GetKeyUp(KeyCode.Space) && transform.position.y < 50) // In Air decelaration
-        { 
+
+            // jet Effects
+            jet_bottom.transform.localScale = new Vector3(0.3f, 0.6f, 0.3f);
+        }
+        else if (Input.GetKeyUp(KeyCode.Space) && transform.position.y < 50) // In Air desaccelaration
+        {
+            //AudioSource effects
             jets.GetComponent<AudioSource>().Stop();
             //Physics.gravity = new Vector3(0, -9.81f, 0);
             // We need the vector to have move force than the gravity, ForceMode is applied against mass
             rb.AddForce(Vector3.down * fall_force, ForceMode.Impulse);
-			jet_bottom.transform.localScale = new Vector3(0.3f, 0, 0.3f);
+
+            // jet Effects
+            jet_bottom.transform.localScale = new Vector3(0.3f, 0, 0.3f);
         }
         else
-        {
-            jet_bottom.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
-            jets.GetComponent<AudioSource>().Stop();
-        }
+        { // return to main effects
 
-        if (transform.position.y < -5) //Fix position if falls belloiw ground
-        {
-            transform.position = Vector3.zero;
+            //AudioSource effects
+            jet_bottom.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
+            //Stop audio
+            jets.GetComponent<AudioSource>().Stop();
         }
     }
 }

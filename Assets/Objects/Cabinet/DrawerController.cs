@@ -32,23 +32,32 @@ public class DrawerController : MonoBehaviour
         GetComponent<Collider>().enabled = open;
     }
 
-    void Update()
+    public void getPlant()
     {
+        Debug.Log("GetPlany before content");
+        if (open && content != null)
+        {
+            Debug.Log("GetPlany");
+            GameObject player = GameObject.FindWithTag("Player");
+            player.GetComponent<PickUpPlant>().grabFromCabinet(content);
+        }
+    }
 
+    public void initPlant(GameObject plant)
+    {
+        content = plant;
+        content.SetActive(false);
     }
 
     public void OnPlayerInteract()
     {
-        Debug.Log("drawer clicked!!!!!");
+
         open = !open;
         OnDrawerDoorOpenClose();
     }
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log("On enter Drawer colider:" + other.name);
-        Debug.Log("is tag pantr:" + other.CompareTag("Plant"));
-
         if (open && other.CompareTag("Plant"))
         {
             Debug.Log("On enter Drawer colider:" + other.name);
@@ -56,6 +65,7 @@ public class DrawerController : MonoBehaviour
         }
     }
 
+    //remove the reference to contents
     void OnTriggerExit(Collider other)
     {
         if (open && other.CompareTag("Plant"))
@@ -65,6 +75,7 @@ public class DrawerController : MonoBehaviour
         }
     }
 
+    // Flags closed and do couroutione to close
     void OnCabinetDoorClose()
     {
         open = false;
@@ -95,23 +106,6 @@ public class DrawerController : MonoBehaviour
                 speed
             )
         );
-    }
-
-    public void getPlant()
-    {
-        Debug.Log("GetPlany before content");
-        if (open && content != null)
-        {
-            Debug.Log("GetPlany");
-            GameObject player = GameObject.FindWithTag("Player");
-            player.GetComponent<PickUpPlant>().grabFromCabinet(content);
-        }
-    }
-
-    public void initPlant(GameObject plant)
-    {
-        content = plant;
-        content.SetActive(false);
     }
 
     IEnumerator moveDoor(Transform door, Vector3 target, float speed)
