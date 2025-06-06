@@ -8,24 +8,20 @@ public class DoorController : MonoBehaviour
     public Vector3 openOffset; // Spostamento della porta per l'apertura - can't be fixed position
     public float speed = 5f;   // Velocità movimento porta
 
-    private Vector3 originalPosition;
-    private Vector3 originalRotation;
+    private Vector3 originalPosition; // (close position)
     private Vector3 openPosition;
-    private bool isOpen = false;
-    private bool is_moving = false;
-    private bool playerInRange = false;
+    private bool isOpen = false; // flag if it's open
+    private bool is_moving = false; // flag to check if door is moving
+    private bool playerInRange = false; // Verify if it is in close range
 
     void Start()
     {
+        // If door, sets the open/close positions
         if (door != null)
         {
             openOffset       = new Vector3(0, 0, transform.localScale.z);
             originalPosition = door.localPosition;
             openPosition     = originalPosition + openOffset;
-        }
-        else
-        {
-            Debug.LogError("Door non assegnata nel DoorController!");
         }
     }
 
@@ -34,7 +30,9 @@ public class DoorController : MonoBehaviour
         if (playerInRange && Input.GetKeyDown(KeyCode.E) && door != null)
         {
             isOpen = !isOpen;
-            Debug.Log("playerInRange pressed E");
+
+            // Close all doors inside the cabinet
+            // if we want to close the cabinet
             if (!isOpen)
             {
                 Transform parent = transform.parent; //Important to be the parent (this script needs to be in a first child)
@@ -42,7 +40,6 @@ public class DoorController : MonoBehaviour
                 {
                     foreach (Transform child in parent)
                     {
-                        // Close all doors inside the cabinet
                         if (child.CompareTag("Cubicle") || child.CompareTag("Drawer"))
                         {
                             child.gameObject.SendMessage("OnCabinetDoorClose", SendMessageOptions.DontRequireReceiver);
@@ -50,20 +47,20 @@ public class DoorController : MonoBehaviour
                     }
                 }
             }
-            Debug.Log("playerInRange after close other doors");
+
             is_moving = true;
 
-            // Disattiva collider se la porta si apre
+            // Disable collider if door opens
             Collider doorCollider = door.GetComponent<Collider>();
             if (doorCollider != null)
             {
                 doorCollider.enabled = !isOpen;
             }
 
-            
-
+            // Togles door to open or close
             Vector3 target = isOpen ? openPosition : originalPosition;
-            Debug.Log("Start routine");
+
+            // Start routine to close/open the door
             StartCoroutine(
                 moveDoor(
                     door,
@@ -75,38 +72,47 @@ public class DoorController : MonoBehaviour
         }
     }
 
+    /*
+     * If Player its the collider,
+     * set flag playerInRange = true
+     * so that it is able to open/close the door
+     */
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("is playerInRange=true; enter");
         if(other.name=="collider"){
-            Debug.Log("yes");
             playerInRange = true;
         }
         
     }
 
+    /*
+     * If Player get's out of the collider,
+     * set flag playerInRange = false
+     * so that the player is not able to open/close the door if is away
+     */
     private void OnTriggerExit(Collider other)
     {
-        Debug.Log("is playerInRange=true; exit");
         if (other.name=="collider"){
-            Debug.Log("yes");
             playerInRange = false;
         }
     }
 
-    
+    /*
+     * Couroutine to move the door
+     * Add sound 
+     * Applies the translation
+     * Waits to be able to close all the doors first
+     */
     IEnumerator moveDoor(Transform door, Vector3 target, float speed, bool isOpen)
     {
-        Debug.Log("in moove door");
+        // Waits only if we want to close the cabinet
         if (!isOpen)
             yield return new WaitForSeconds(0.5f); // Wait for 0.5 seconds
 
-        
+        // cabinet sounds
         AudioSource audio = gameObject.GetComponent<AudioSource>();
         audio.loop = true;
         audio.Play();
-
-        //yield return new WaitForSeconds(0.5f); // Wait for 0.5 seconds
 
         while (is_moving)
         {

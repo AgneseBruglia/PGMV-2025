@@ -33,8 +33,11 @@ For the development of this project, we got inspired, consulted and research doc
    - https://assetstore.unity.com/packages/3d/vegetation/plants/stylized-potted-plants-290047
 2. PGVM Class Resources
 3. Brackeys - Youtube
-  - https://www.youtube.com/watch?v=lhELeLnynI8
+ - https://www.youtube.com/watch?v=lhELeLnynI8
 4. Reaper (sound editing)
+ - https://www.reaper.fm/
+5. Microsoft Clipchamp
+ - https://visualstudio.microsoft.com/
 5. Microsoft VisualStudio
  - https://visualstudio.microsoft.com/
 6. C# language documentation

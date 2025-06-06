@@ -2648,7 +2648,7 @@ GameObject:
   - component: {fileID: 4762087655183283002}
   - component: {fileID: 1917195939555226812}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: mass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4410,7 +4410,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: a2bc5519d2a39ba42a60604c31800503, type: 3}
+  m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: a2bc5519d2a39ba42a60604c31800503, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
