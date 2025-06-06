@@ -4047,7 +4047,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Press "C" to open the commands interface
+  m_text: 'Press "C" to open the commands interface
+
+    "CTRL+ALT+ESC" to exit the
+    game'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
   m_sharedMaterial: {fileID: 2140032, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
@@ -18125,14 +18128,26 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 1479742629}
+    - target: {fileID: 4780754430027658639, guid: a9b7acc176067ad4f9763d50aab68e23, type: 3}
+      propertyPath: m_VersionIndex
+      value: 2611
+      objectReference: {fileID: 0}
     - target: {fileID: 5895840030811001566, guid: a9b7acc176067ad4f9763d50aab68e23, type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 544749595}
+    - target: {fileID: 5895840030811001566, guid: a9b7acc176067ad4f9763d50aab68e23, type: 3}
+      propertyPath: m_VersionIndex
+      value: 2611
+      objectReference: {fileID: 0}
     - target: {fileID: 7575449168356021756, guid: a9b7acc176067ad4f9763d50aab68e23, type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 979155721}
+    - target: {fileID: 7575449168356021756, guid: a9b7acc176067ad4f9763d50aab68e23, type: 3}
+      propertyPath: m_VersionIndex
+      value: 2611
+      objectReference: {fileID: 0}
     - target: {fileID: 8634446547903264709, guid: a9b7acc176067ad4f9763d50aab68e23, type: 3}
       propertyPath: m_LocalPosition.x
       value: 70.8
