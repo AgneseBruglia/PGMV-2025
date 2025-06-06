@@ -27,6 +27,10 @@ For the development of this project, we got inspired, consulted and research doc
    - https://assetstore.unity.com/packages/p/yughues-free-metal-materials-12949
   1.1.9. Yughues Free Rock Materials:
    - https://assetstore.unity.com/packages/p/yughues-free-rock-materials-12962
+  1.1.10. Flowers and leaf prefabs:
+   - https://www.meshy.ai/
+  1.1.11. Plant pot: 
+   - https://assetstore.unity.com/packages/3d/vegetation/plants/stylized-potted-plants-290047
 2. PGVM Class Resources
 3. Brackeys - Youtube
   - https://www.youtube.com/watch?v=lhELeLnynI8
